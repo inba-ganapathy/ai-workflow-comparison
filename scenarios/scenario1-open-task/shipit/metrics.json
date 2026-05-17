@@ -1,0 +1,46 @@
+{
+  "scenario": "1-open-task",
+  "workflow": "shipit",
+  "mode": "sequential-no-agent-teams",
+  "start_time": "2026-05-17T16:03:52Z",
+  "end_time": "2026-05-17T16:45:00Z",
+  "elapsed_seconds": 2468,
+  "tool_calls_total": 42,
+  "phases_completed": [
+    "phase1-analyst",
+    "phase2-backend-engineer",
+    "phase3-frontend-engineer",
+    "phase4-reviewer",
+    "phase5-qa-validator"
+  ],
+  "review_score": 22,
+  "bugs_found": [
+    "Bug1: manager.py approve_plan broadcasts plan_cancelled before DB update in cancel path",
+    "Bug2: store/index.ts plan_started handler silently skips when plan not in store",
+    "Bug3: store/index.ts updatePlanStep raw step-id never matches DB-prefixed step-id",
+    "Bug4: db.py create_plan step_type normalisation double-lookup ambiguity",
+    "Bug5: repo_manager.py _execute_plan uses stale steps list for post-execution summary",
+    "Bug6: session_watcher.py debounce keeps-first instead of keeps-last in burst"
+  ],
+  "bugs_fixed": [
+    "Bug1: manager.py approve_plan - DB before broadcast; removed 503 on approve with no orchestrator",
+    "Bug4: db.py create_plan - simplified step_type normalisation to clear single-pass lookup",
+    "Bug5: repo_manager.py - re-fetch steps from DB after execution loop",
+    "Bug6: session_watcher.py - sliding window debounce (keep-last)",
+    "Bug2: store/index.ts - plan_started creates stub plan when not in store",
+    "Bug3: store/index.ts - updatePlanStep migrates raw ids to DB-prefixed ids on first step_started"
+  ],
+  "tests_written": 6,
+  "tests_passing": 32,
+  "python_syntax_ok": true,
+  "typescript_ok": true,
+  "files_actually_changed": [
+    "claude_talk/routers/manager.py",
+    "claude_talk/db.py",
+    "claude_talk/agents/repo_manager.py",
+    "claude_talk/watchers/session_watcher.py",
+    "frontend/src/store/index.ts",
+    "tests/test_manager_bugs.py"
+  ],
+  "agent_teams_available": false
+}

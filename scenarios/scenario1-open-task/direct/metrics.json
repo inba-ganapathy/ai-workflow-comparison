@@ -1,0 +1,28 @@
+{
+  "scenario": "1-open-task",
+  "workflow": "direct",
+  "start_time": "2026-05-17T16:13:57Z",
+  "end_time": "2026-05-17T16:17:13Z",
+  "elapsed_seconds": 196,
+  "tool_calls_total": 22,
+  "bugs_found": [
+    "GET /api/manager/conversations returns list but test expects get-or-create single conversation with messages",
+    "store/index.ts plan_proposed handler passes raw payload as Plan — plan_data field not mapped from nested plan.steps",
+    "ManagerChat.tsx useEffect([messages, plans]) calls upsertPlan which modifies plans, causing infinite render loop",
+    "_do_commit and _do_open_pr call subprocess.run directly in async context, blocking the event loop",
+    "_sign_off_on_step reads decision.get('notes') but prompt returns key 'note' (singular), so sign-off notes are always empty",
+    "plan_cancelled and plan_started WS events not handled in dispatchWSEvent, so plan status never updates in UI"
+  ],
+  "bugs_fixed": [
+    "GET /api/manager/conversations now returns get-or-create conversation + messages alongside conversations list",
+    "store/index.ts plan_proposed handler now maps payload.plan.steps to PlanStep[] and sets plan_data correctly",
+    "ManagerChat.tsx useEffect now uses a seededPlanIds ref to prevent infinite loop — plans removed from deps",
+    "_do_commit and _do_open_pr all subprocess.run calls offloaded to _SESSION_EXECUTOR via run_in_executor",
+    "_sign_off_on_step now reads decision.get('note') first before falling back to 'notes' and 'reason'",
+    "dispatchWSEvent now handles plan_cancelled (marks status cancelled) and plan_started (marks status in_progress)"
+  ],
+  "tests_written": 0,
+  "tests_passing": 26,
+  "python_syntax_ok": true,
+  "typescript_ok": true
+}

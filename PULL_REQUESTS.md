@@ -25,3 +25,16 @@ environment issues (missing llama_index/defusedxml — unrelated to the study ch
 | 🔬 Innerloop | [PR #4](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4) | 17/25 | 9/10 |
 | ⚡ Direct | [PR #5](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5) | 18/25 | 10/10 |
 | 🚀 ShipIt | [PR #6](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6) | 11/25 | **0/10** (evidence only) |
+
+## Scenario 1 — Open Task (claude-talk, cold-start)
+| Workflow | PR | Notes |
+|----------|-----|-------|
+| 🔬 Innerloop | [PR #7](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/7) | 6 bugs, 2 tests |
+| ⚡ Direct | [PR #9](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/9) | 6 bugs, 0 tests |
+| 🚀 ShipIt | [PR #8](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/8) | 6 bugs, 6 tests, review 22/25 |
+
+## Scenario 2 ShipIt Re-run (anomaly verification)
+| Run | PR | Result |
+|-----|-----|--------|
+| Run 1 (anomaly) | [PR #6](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6) | 0/10 bugs fixed |
+| Run 2 (rerun) | scenario2-shipit-rerun branch | 8/10 bugs fixed — anomaly confirmed |

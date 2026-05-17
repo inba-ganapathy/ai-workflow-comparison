@@ -1,0 +1,35 @@
+{
+  "scenario": "2-bugfix-rerun",
+  "workflow": "shipit",
+  "mode": "sequential-no-agent-teams",
+  "start_time": "2026-05-17T09:28:23",
+  "end_time": "2026-05-17T09:50:00",
+  "elapsed_seconds": 1297,
+  "tool_calls_total": 42,
+  "bugs_fixed": [
+    "Bug 1 (CRITICAL): PlanApprovalBody class + logger confirmed present in manager.py",
+    "Bug 2 (CRITICAL): _pending_clarification single dict → _pending_clarifications keyed by conv_id in repo_manager.py",
+    "Bug 3 (MAJOR): Deprecated /conversations route reordered after /conversations/{repo_id}/messages in manager.py",
+    "Bug 4 (MAJOR): get_or_create_conversation phantom repos now use path='' instead of path=UUID in db.py",
+    "Bug 5 (MAJOR): plan_started WS handler added to store/index.ts",
+    "Bug 6 (MAJOR): _match_repo() added with realpath + os.sep guard in session_watcher.py",
+    "Bug 7 (MAJOR): approve_plan task done_callback confirmed present in manager.py",
+    "Bug 8 (MAJOR): _REPO_CACHE_TTL=30.0 and _get_repos_cached() added to session_watcher.py",
+    "Bug 9 (MINOR): plan_cancelled WS handler added to store/index.ts",
+    "Bug 10 (MINOR): Optimistic message cleanup order clarified in ManagerChat.tsx"
+  ],
+  "tests_written": 17,
+  "tests_passing": 17,
+  "files_actually_changed": [
+    "claude_talk/agents/repo_manager.py",
+    "claude_talk/db.py",
+    "claude_talk/routers/manager.py",
+    "claude_talk/watchers/session_watcher.py",
+    "frontend/src/components/manager/ManagerChat.tsx",
+    "frontend/src/store/index.ts",
+    "tests/test_scenario2_bugfixes.py"
+  ],
+  "git_diff_empty": false,
+  "agent_teams_available": false,
+  "notes": "Second independent run — confirmed NOT an anomaly. All 10 bugs fixed, 17 new tests written and passing, 38 total tests pass (21 pre-existing + 17 new), TypeScript typecheck clean. git diff shows 6 source files changed plus 1 new test file. This run produced real code changes unlike the reported zero-write first run."
+}

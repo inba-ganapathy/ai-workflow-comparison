@@ -1,0 +1,35 @@
+{
+  "scenario": "1-open-task",
+  "workflow": "innerloop",
+  "start_time": "2026-05-17T16:04:14Z",
+  "end_time": "2026-05-17T16:10:54Z",
+  "elapsed_seconds": 400,
+  "tool_calls_total": 37,
+  "bugs_found": [
+    "approve_plan endpoint returns success without updating DB when no manager_agent available (plan stays proposed)",
+    "ManagerChat optimistic message added AFTER API call completes (defeats purpose of optimistic UI)",
+    "store upsertPlan crashes when plan_data is undefined (plan_completed WS event has no plan_data)",
+    "plan_completed/plan_updated WS handler passes raw payload as Plan (payload has plan_id not id, no plan_data)",
+    "PlanSummary type missing from types.ts (used in api.ts and WorkItemsList.tsx)",
+    "ManagerChat thinking status immediately reset in finally block (should persist until manager response arrives)"
+  ],
+  "bugs_fixed": [
+    "approve_plan endpoint now calls db.approve_plan() before attempting agent execution",
+    "ManagerChat adds optimistic message immediately before API call, removes on error",
+    "store upsertPlan guards against missing plan_data with null check and merges with existing",
+    "plan_completed/plan_updated WS handler correctly resolves plan by plan_id and updates status",
+    "PlanSummary interface added to types.ts",
+    "ManagerChat thinking status only reset on error, persists until manager response arrives"
+  ],
+  "tests_written": 2,
+  "tests_passing": 35,
+  "python_syntax_ok": true,
+  "typescript_ok": true,
+  "phases": {
+    "investigate_sec": 180,
+    "plan_sec": 30,
+    "implement_sec": 150,
+    "verify_sec": 30,
+    "review_sec": 10
+  }
+}

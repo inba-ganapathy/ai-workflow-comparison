@@ -776,7 +776,7 @@
     <div class="section-sub">What the data tells us for strategic workflow selection</div>
 
     <div class="findings-stack">
-      <div class="finding-card">
+      <div class="finding-card" style="border-left-color: var(--success);">
         <div class="finding-number">01</div>
         <div class="finding-body">
           <div class="finding-title">Direct Implementation is the Default Choice for Well-Specified Tasks</div>
@@ -790,7 +790,7 @@
           <div class="finding-text">InnerLoop completes S1 in 6.7 min and S2 in 6.8 min — consistently faster than ShipIt and near-instant for low-complexity work. However, its $28.73 total cost and lower council scores on S3/S4 limit its value for complex features.</div>
         </div>
       </div>
-      <div class="finding-card" style="border-left-color: var(--si);">
+      <div class="finding-card" style="border-left-color: var(--warning);">
         <div class="finding-number">03</div>
         <div class="finding-body">
           <div class="finding-title">ShipIt's 15.0 Average Score Does Not Justify Its Complexity Overhead</div>
@@ -1436,7 +1436,8 @@ new Chart(costCtx, {
           </div>
         </div>
       </div></div>
-      <div class="chart-card" style="margin-bottom:24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:0;">
+        <div class="chart-card" style="margin-bottom:0;">
         <div class="chart-title">SFDC Council — 5 Independent Reviewers</div>
         <div class="chart-subtitle">Each workflow output reviewed by 5 AI models independently before converging. Min quorum: 3/5.</div>
         <table style="width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;">
@@ -1451,7 +1452,7 @@ new Chart(costCtx, {
         </table>
         <p style="font-size:12px;color:#5A6977;margin-top:12px;">Gateway: LLMGateway Express · eng-ai-model-gateway.sfproxy.devx-preprod.aws.sfdc.cl</p>
       </div>
-      <div class="chart-card">
+        <div class="chart-card">
         <div class="chart-title">Cost Methodology</div>
         <div class="chart-subtitle">Estimated from agent token usage · Claude Opus 4.7 pricing</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;margin-bottom:20px;">
@@ -1488,3 +1489,4 @@ new Chart(costCtx, {
 
 </body>
 </html>
+      </div>

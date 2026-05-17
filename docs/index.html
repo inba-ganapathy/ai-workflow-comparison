@@ -1159,106 +1159,161 @@
 <section class="tab-section" id="tab-guidance">
   <div class="page-body">
     <div class="page-section"><div class="page-section-inner">
-      <div class="decision-wrap">
-    <div class="decision-header">
-      <span>Decision Criterion</span>
-      <span>InnerLoop</span>
-      <span>Direct</span>
-      <span>ShipIt</span>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Highest quality output needed</div>
-      <div><span class="dc dc-partial">Partial</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-no">No</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Cost-sensitive environment</div>
-      <div><span class="dc dc-no">No</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-partial">Partial</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Speed-critical simple task</div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-no">No</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Complex feature development</div>
-      <div><span class="dc dc-no">No</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-partial">Partial</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Mature CI/CD pipeline in place</div>
-      <div><span class="dc dc-partial">Partial</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">Standard sprint work items</div>
-      <div><span class="dc dc-partial">Partial</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-no">No</span></div>
-    </div>
-    <div class="decision-row">
-      <div class="decision-criterion">High-frequency batch throughput</div>
-      <div><span class="dc dc-yes">Yes</span></div>
-      <div><span class="dc dc-partial">Partial</span></div>
-      <div><span class="dc dc-yes">Yes</span></div>
-    </div>
-  </div>
 
-  <div class="rec-grid">
-    <div class="rec-card" style="border-top:4px solid var(--il);">
-      <div class="rec-header">
-        <div class="rec-icon" style="background:rgba(3,45,96,0.08);">🔄</div>
-        <div>
-          <div class="rec-name">InnerLoop</div>
-          <div class="rec-tagline">Speed-first simple tasks</div>
-        </div>
-      </div>
-      <ul class="rec-list">
-        <li>Time-critical bug fixes where 3–7 min matters</li>
-        <li>High-frequency, low-complexity sprint tasks</li>
-        <li>Scenarios where iteration speed beats quality</li>
-        <li>Not recommended for S4-type complex features</li>
-      </ul>
-    </div>
-    <div class="rec-card" style="border-top:4px solid var(--dir);">
-      <div class="rec-header">
-        <div class="rec-icon" style="background:rgba(1,118,211,0.08);">⚡</div>
-        <div>
-          <div class="rec-name">Direct Implementation</div>
-          <div class="rec-tagline">Default for all standard work</div>
-        </div>
-      </div>
-      <ul class="rec-list">
-        <li>Recommended default for all sprint work items</li>
-        <li>Complex features needing high council scores</li>
-        <li>Any scenario where cost discipline matters</li>
-        <li>Well-specified tasks with clear acceptance criteria</li>
-      </ul>
-    </div>
-    <div class="rec-card" style="border-top:4px solid var(--si);">
-      <div class="rec-header">
-        <div class="rec-icon" style="background:rgba(11,130,124,0.12);">🚀</div>
-        <div>
-          <div class="rec-name">ShipIt</div>
-          <div class="rec-tagline">CI/CD-integrated automation</div>
-        </div>
-      </div>
-      <ul class="rec-list">
-        <li>Mature CI/CD pipelines where setup costs amortized</li>
-        <li>S4-type features needing 11-min turnaround</li>
-        <li>Batch automation scenarios at scale</li>
-        <li>Avoid for simple tasks — 41-min S1 time is prohibitive</li>
-      </ul>
-    </div>
-  </div>
+      <div class="section-heading">Decision Guide</div>
+      <div class="section-sub">Use this matrix to select the right workflow for your task</div>
 
-</div>
+      <!-- Decision matrix -->
+      <div class="chart-card" style="margin-bottom:24px;padding:0;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:13px 20px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;width:36%;">Situation</th>
+              <th style="padding:13px 20px;text-align:center;font-weight:700;color:#93c5fd;">InnerLoop</th>
+              <th style="padding:13px 20px;text-align:center;font-weight:700;color:#86efac;">Direct</th>
+              <th style="padding:13px 20px;text-align:center;font-weight:700;color:#5eead4;">ShipIt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Production code, tests required</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">OK</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">RISKY</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Time-critical prototype (&lt;15 min)</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">TOO SLOW</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">TOO SLOW</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">GUS work item with clear AC</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">OK</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">OK</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">High test coverage required</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">MINIMAL</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">SOME</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Unattended async pipeline</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">PARTIAL</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">PARTIAL</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Complex feature, open-ended</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">OK</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">PARTIAL</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Cost-sensitive, scoped bug fix</td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fef9c3;color:#854d0e;">OK</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#dcfce7;color:#166534;">BEST</span></td>
+              <td style="padding:11px 20px;text-align:center;"><span style="display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;">NO</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Overall ranking table — corrected data -->
+      <div class="chart-card" style="margin-bottom:24px;padding:0;overflow:hidden;">
+        <div style="padding:20px 24px 12px;"><div class="chart-title">Overall Ranking by Dimension</div></div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:11px 20px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Dimension</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">1st</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">2nd</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">3rd</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Speed</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Council quality score</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (20.3 avg)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (18.3)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (15.0)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Test coverage</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);font-weight:700;">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Cost efficiency</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct ($16.48)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt ($22.46)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop ($28.73)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Autonomy (no human gates)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);font-weight:700;">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;">
+              <td style="padding:11px 20px;font-weight:500;">Bug fix accuracy</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (10/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (9/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (8/10 re-run)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 3 recommendation cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div class="chart-card" style="border-top:4px solid var(--il);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-il">InnerLoop</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Speed-first simple tasks</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Time-critical bug fixes (3–7 min)</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>High-frequency sprint tasks</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Complex features needing tests</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--error);flex-shrink:0;">✗</span>Not for S4-type features alone</li>
+          </ul>
+        </div>
+        <div class="chart-card" style="border-top:4px solid var(--dir);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-dir">Direct</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Default for all standard work</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Recommended default for sprint items</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Complex features needing high scores</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Any scenario where cost matters</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Well-specified tasks with clear AC</li>
+          </ul>
+        </div>
+        <div class="chart-card" style="border-top:4px solid var(--si);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-si">ShipIt</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">CI/CD-integrated automation</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Mature CI/CD pipelines</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>GUS W-number driven tasks</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Requires Agent Teams enabled</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--error);flex-shrink:0;">✗</span>Avoid for simple tasks (41-min S1)</li>
+          </ul>
+        </div>
+      </div>
+
     </div></div>
   </div>
 </section>

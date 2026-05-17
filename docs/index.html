@@ -1054,44 +1054,605 @@
 
       <!-- InnerLoop Unique -->
       <div class="chart-card" style="border-top-color:var(--il);margin-bottom:0;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;"><span class="workflow-pill pill-il">InnerLoop</span><span style="font-size:13px;color:var(--muted);">6 bugs · S1 cold start</span></div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Source: scenario1-innerloop-metrics.json</p>
-        <div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">approve_plan returns success WITHOUT updating DB when no orchestrator — plan stays "proposed" forever</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">cancel_plan does not clear _pending_plan state — next message mis-routed to plan response handler</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">store upsertPlan crashes when plan_data is undefined (plan_completed WS event omits it)</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">plan_completed/updated WS handler passes raw payload as Plan type — plan_id ≠ id, plan_data absent</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#DBEAFE;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#1e40af;min-width:50px;padding-top:2px;letter-spacing:.06em;">MINOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">PlanSummary TypeScript type missing from types.ts (used in api.ts and WorkItemsList.tsx)</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#DBEAFE;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#1e40af;min-width:50px;padding-top:2px;letter-spacing:.06em;">MINOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">ManagerChat thinking status reset in finally block — resets before manager response arrives</span></div>
-          <div style="margin-top:10px;padding:8px 10px;background:#ede9fe;border-radius:5px;font-size:12px;color:#4c1d95;font-weight:600;">Also wrote 3 regression tests.</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-il">InnerLoop</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings — S1 Open Task</span>
         </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Plan approval DB race</strong> — <code>approve_plan</code> returns success without updating DB when no manager_agent is available; plan stays stuck in "proposed" state permanently</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Optimistic UI defeat</strong> — ManagerChat adds optimistic message <em>after</em> the API call completes instead of before; defeats the purpose of optimistic UI, adds latency</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>upsertPlan crash on plan_completed</strong> — <code>store.upsertPlan</code> crashes when <code>plan_data</code> is undefined; <code>plan_completed</code> WS event payload carries no <code>plan_data</code></span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>WS handler payload mismatch</strong> — <code>plan_completed</code> / <code>plan_updated</code> handlers pass raw payload as <code>Plan</code>; payload has <code>plan_id</code> not <code>id</code>, missing <code>plan_data</code></span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>PlanSummary type missing</strong> — <code>PlanSummary</code> referenced in <code>api.ts</code> and <code>WorkItemsList.tsx</code> but never declared in <code>types.ts</code>; TypeScript compile error</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Thinking status never resets</strong> — <code>managerStatus</code> reset to idle in <code>finally</code> block immediately after send; should remain "thinking" until manager response arrives via WS</span></li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">Source: <code>/tmp/scenario1-innerloop-metrics.json</code> · 6 of 6 bugs verified from primary metrics file</div>
       </div>
 
       <!-- Direct Unique -->
       <div class="chart-card" style="border-top-color:var(--dir);margin-bottom:0;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;"><span class="workflow-pill pill-dir">Direct</span><span style="font-size:13px;color:var(--muted);">6 bugs · S1 cold start</span></div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Source: scenario1-direct-metrics.json</p>
-        <div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">GET /api/manager/conversations shape mismatch — returns list but callers expect get-or-create single conversation with messages</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">plan_proposed WS handler: plan_data not mapped from payload.plan.steps — plan card never renders</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">ManagerChat useEffect([messages, plans]) infinite loop — upsertPlan mutates plans, re-triggers effect</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">_do_commit/_do_open_pr call subprocess.run() in async context — blocks event loop up to 30s per git op</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">_sign_off_on_step reads decision.get("notes") but LLM returns key "note" (singular) — notes always empty</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#DBEAFE;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#1e40af;min-width:50px;padding-top:2px;letter-spacing:.06em;">MINOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">plan_cancelled and plan_started absent from dispatchWSEvent — plan status never reflects cancel/start in UI</span></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-dir">Direct</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings — S1 Open Task</span>
         </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>Conversations endpoint shape mismatch</strong> — <code>GET /api/manager/conversations</code> returns a list but tests/frontend expect a get-or-create single conversation with messages</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>plan_proposed WS payload not mapped</strong> — <code>store/index.ts</code> <code>plan_proposed</code> handler passes raw payload as <code>Plan</code>; <code>plan_data</code> field not extracted from nested <code>plan.steps</code></span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>useEffect infinite loop</strong> — <code>ManagerChat.tsx</code> effect on <code>[messages, plans]</code> calls <code>upsertPlan</code> which mutates <code>plans</code>, re-triggering the effect endlessly</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>Event loop blocking</strong> — <code>_do_commit</code> and <code>_do_open_pr</code> call <code>subprocess.run</code> directly in async context, blocking the entire event loop during git operations</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>Wrong JSON key for sign-off notes</strong> — sign-off prompt returns key <code>"note"</code> (singular) but <code>_sign_off_on_step</code> reads <code>decision.get("notes")</code>; sign-off notes always silently empty</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>WS events missing handlers</strong> — <code>plan_cancelled</code> and <code>plan_started</code> events have no handlers in <code>dispatchWSEvent</code>; plan status never updates in UI until page reload</span></li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">Source: <code>/tmp/scenario1-direct-metrics.json</code> · 6 of 6 bugs verified from primary metrics file</div>
       </div>
 
       <!-- ShipIt Unique -->
       <div class="chart-card" style="border-top-color:var(--si);margin-bottom:0;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;"><span class="workflow-pill pill-si">ShipIt</span><span style="font-size:13px;color:var(--muted);">6 bugs · S1 cold start</span></div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">Source: scenario1-shipit-metrics.json</p>
-        <div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">approve_plan broadcasts plan_cancelled BEFORE DB update — clients see stale state</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">plan_started handler skips update when plan not in store — plan stuck at "proposed" on reconnect</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">updatePlanStep: raw step-id never matches DB-prefixed step-id — step progress tracking broken</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">db.create_plan step_type normalisation uses opaque double-lookup — maintenance risk</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">_execute_plan passes stale steps list to _generate_summary — result_summary fields missing</span></div>
-          <div style="display:flex;gap:8px;padding:8px 10px;border-radius:5px;background:#FEF3C7;margin-bottom:6px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#92400E;min-width:50px;padding-top:2px;letter-spacing:.06em;">MAJOR</span><span style="font-size:12px;color:#1e293b;line-height:1.5;">session_watcher debounce keeps-first — burst of file events drops all intermediate state changes</span></div>
-          <div style="margin-top:10px;padding:8px 10px;background:#f0fdfa;border-radius:5px;font-size:12px;color:#065f46;font-weight:600;">ShipIt uniquely identified DB-prefixed step-id mismatch and debounce keeps-first flaw — both missed by other workflows.</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-si">ShipIt</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings — S1 Open Task</span>
         </div>
-      </div>>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>Cancel path DB ordering</strong> — <code>approve_plan</code> cancel path broadcasts <code>plan_cancelled</code> WS event <em>before</em> updating DB status; UI and DB transiently inconsistent</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>plan_started handler silent drop</strong> — <code>store/index.ts</code> <code>plan_started</code> handler silently skips the status update if the plan isn't already loaded in the store; badge stays "proposed"</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>updatePlanStep ID mismatch</strong> — <code>store/index.ts</code> <code>updatePlanStep</code> raw step-id from WS event never matches DB-prefixed step-id; step progress indicators always stale</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>create_plan step_type normalisation ambiguity</strong> — <code>db.py create_plan</code> step_type normalisation uses a double-lookup dict; ambiguous key resolution when step type appears in multiple categories</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>Stale steps list in post-exec summary</strong> — <code>repo_manager.py _execute_plan</code> reads steps list once before execution; post-execution summary uses stale data if any step was added or modified during run</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>Session watcher debounce keeps-first</strong> — <code>session_watcher.py</code> burst dedup set keeps the <em>first</em> event per file instead of the last; rapid session file changes processed with stale data</span></li>
+        </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">Source: <code>/tmp/scenario1-shipit-metrics.json</code> · 6 of 6 bugs verified from primary metrics file</div>
+      </div>
+    </div>
+
+    <div class="section-heading">Council Score Breakdown</div>
+    <div class="section-sub">5-model SFDC Council scores across all 4 scenarios (out of 25 per scenario)</div>
+
+    <div class="chart-card" style="padding:0;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:var(--navy);color:#fff;">
+            <th style="padding:14px 20px;text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;">Dimension</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S1 Open Task</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S2 Bug Fix</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S3 Work Item</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S4 Feature</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:700;background:rgba(255,255,255,.08);">Avg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--navy);">🔬 InnerLoop</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--warning);font-weight:700;">18/25<span style="display:block;font-size:10px;color:var(--muted);font-weight:400;">see note*</span></td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">19/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">19/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:700;color:var(--navy);background:#EEF4FF;">18.3</td>
+          </tr>
+          <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--dir);">⚡ Direct</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--error);font-weight:700;">14/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">18/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">22/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">21/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:800;color:var(--success);background:#EEF4FF;">20.3 ↑</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--si);">🚀 ShipIt</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">20/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--error);font-weight:700;">11/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:700;color:var(--error);background:#EEF4FF;">15.0</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding:12px 20px;background:#f9f9f9;font-size:12px;color:var(--muted);border-top:1px solid var(--border);">
+        S2 ShipIt score (11/25) reflects code inspection finding zero actual source changes despite polished evidence documents. Re-run scored higher.
+      </div>
+    </div>
+
+
+    <div class="section-heading" style="margin-top:48px;">Pull Requests &amp; Artifacts</div>
+    <div class="section-sub">All implementations committed as draft PRs — base branch: feat/sb-scaffold (claude-talk) · main (beethoven)</div>
+
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:32px;">
+
+      <!-- S1 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S1 — Open Task · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/7" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario1-innerloop</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #7 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/9" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario1-direct</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #9 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/8" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario1-shipit</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #8 →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- S2 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S2 — Bug Fix · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario2-innerloop · 9/10 fixed</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #4 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario2-direct · 10/10 fixed</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #5 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario2-shipit · evidence only</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #6 →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- S3 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S3 — W-21632772 · beethoven / GenUI Services</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/7" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario3-innerloop · 19/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #7 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/8" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario3-direct · 22/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #8 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/9" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario3-shipit · 17/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #9 →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- S4 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S4 — Second Brain · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/1" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario4-innerloop · 57 tests</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #1 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/2" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario4-direct · folders + backlinks</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #2 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/3" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario4-shipit · FTS triggers</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #3 →</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+
+
+  </div></div></div>
+</section>
+
+<!-- ══════════════ GUIDANCE ══════════════ -->
+<section class="tab-section" id="tab-guidance">
+  <div class="page-body">
+    <div class="page-section"><div class="page-section-inner">
+
+      <div class="section-heading">Decision Guide</div>
+      <div class="section-sub">Use this matrix to select the right workflow for your task</div>
+
+      <!-- Decision matrix -->
+      <div class="chart-card" style="margin-bottom:24px;padding:0;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:13px 24px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;width:40%;">Decision Criterion</th>
+              <th style="padding:13px 24px;text-align:center;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;">InnerLoop</th>
+              <th style="padding:13px 24px;text-align:center;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;">Direct</th>
+              <th style="padding:13px 24px;text-align:center;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;">ShipIt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Highest quality output needed</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEE2E2;color:#991B1B;">NO</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Cost-sensitive environment</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEE2E2;color:#991B1B;">NO</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Speed-critical simple task</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEE2E2;color:#991B1B;">NO</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Complex feature development</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEE2E2;color:#991B1B;">NO</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Mature CI/CD pipeline in place</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">Standard sprint work items</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEE2E2;color:#991B1B;">NO</span></td>
+            </tr>
+            <tr>
+              <td style="padding:14px 24px;font-weight:600;color:var(--navy);">High-frequency batch throughput</td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;">PARTIAL</span></td>
+              <td style="padding:14px 24px;text-align:center;"><span style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:#D1FAE5;color:#065F46;">YES</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="padding:10px 20px;background:#f9f9f9;border-top:1px solid var(--border);font-size:12px;color:var(--muted);">* Avg excludes S1 (open task). S1 council scores: ShipIt 20/25 (winner) · InnerLoop 18/25 · Direct 14/25. Including S1: Direct 18.75, InnerLoop 18.25, ShipIt 16.25.</div>
+      </div>
+
+      <!-- S4 InnerLoop time footnote handled via "est." label -->
+      <!-- 3 recommendation cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div class="chart-card" style="border-top:4px solid var(--il);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-il">InnerLoop</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Speed-first simple tasks</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Time-critical bug fixes (3–7 min)</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>High-frequency sprint tasks</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Complex features needing tests</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--error);flex-shrink:0;">✗</span>Not for S4-type features alone</li>
+          </ul>
+        </div>
+        <div class="chart-card" style="border-top:4px solid var(--dir);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-dir">Direct</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Default for all standard work</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Recommended default for sprint items</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Complex features needing high scores</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Any scenario where cost matters</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Well-specified tasks with clear AC</li>
+          </ul>
+        </div>
+        <div class="chart-card" style="border-top:4px solid var(--si);margin-bottom:0;padding:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span class="workflow-pill pill-si">ShipIt</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">CI/CD-integrated automation</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text);">
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Mature CI/CD pipelines</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>GUS W-number driven tasks</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--success);flex-shrink:0;">✓</span>Requires Agent Teams enabled</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--error);flex-shrink:0;">✗</span>Avoid for simple tasks (41-min S1)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div></div>
+  </div>
+</section>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + target).classList.add('active');
+    if (target === 'cost') setTimeout(initCostChart, 50);
+  });
+});
+
+// Chart defaults
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#5A6977';
+
+// Council scores chart
+const councilCtx = document.getElementById('councilChart').getContext('2d');
+new Chart(councilCtx, {
+  type: 'bar',
+  data: {
+    labels: ['S1 — Open Task', 'S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
+    datasets: [
+      {
+        label: 'InnerLoop',
+        data: [18, 17, 19, 19],
+        backgroundColor: '#032D60',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'Direct',
+        data: [14, 18, 22, 21],
+        backgroundColor: '#0176D3',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'ShipIt',
+        data: [20, 11, 17, 17],
+        backgroundColor: '#0B827C',
+        borderRadius: 6,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#032D60',
+        bodyColor: '#5A6977',
+        borderColor: '#D8E3F0',
+        borderWidth: 1,
+        padding: 12,
+        titleFont: { weight: '700', size: 13 },
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}/25`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { font: { size: 13, weight: '500' }, color: '#5A6977' }
+      },
+      y: {
+        grid: { color: '#F2F5FA', lineWidth: 1 },
+        border: { display: false, dash: [4,4] },
+        min: 0,
+        max: 25,
+        ticks: {
+          stepSize: 5,
+          font: { size: 12 },
+          callback: v => v + '/25'
+        }
+      }
+    }
+  }
+});
+
+<!-- ══════════════ METHODOLOGY ══════════════ -->
+<section class="tab-section" id="tab-methodology">
+  <div class="page-body">
+    <div class="page-section">
+      <div class="page-section-inner">
+
+        <div class="section-heading">Methodology &amp; Data Integrity</div>
+        <div class="section-sub">Every data point is verifiable from primary sources</div>
+
+        <!-- Prompts card -->
+        <div class="chart-card" style="margin-bottom:24px;">
+          <div class="chart-title">Identical Prompts — Zero Pre-Analysis</div>
+          <div class="chart-subtitle">All 3 workflows received the same raw prompt simultaneously, starting from the same git commit (39de552) in isolated worktrees. No bug lists, no hints.</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
+            <div style="display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+              <div style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:12px 16px;min-width:48px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;flex-shrink:0;">S1</div>
+              <div style="padding:12px 16px;font-size:13px;color:var(--text);background:#fff;line-height:1.5;">"The claude-talk Manager Portal has reliability and correctness issues. Investigate the codebase, identify problems, and fix them."</div>
+            </div>
+            <div style="display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+              <div style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:12px 16px;min-width:48px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;flex-shrink:0;">S2</div>
+              <div style="padding:12px 16px;font-size:13px;color:var(--text);background:#fff;line-height:1.5;">[10 pre-identified bugs provided verbatim — exact file paths, severity, and descriptions for all 3 workflows]</div>
+            </div>
+            <div style="display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+              <div style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:12px 16px;min-width:48px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;flex-shrink:0;">S3</div>
+              <div style="padding:12px 16px;font-size:13px;color:var(--text);background:#fff;line-height:1.5;">GUS <strong>W-21632772</strong> — "Parameterize output for loops in structured data" <span style="color:var(--muted);font-size:12px;">(queried live from gus.lightning.force.com 2026-05-17)</span></div>
+            </div>
+            <div style="display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+              <div style="background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:12px 16px;min-width:48px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;flex-shrink:0;">S4</div>
+              <div style="padding:12px 16px;font-size:13px;color:var(--text);background:#fff;line-height:1.5;">"Add a Second Brain tab to claude-talk... <strong>Phase 1</strong>: investigate existing RAG + FTS5. <strong>Phase 2</strong>: architecture doc. <strong>Phase 3</strong>: 5 parallel agents implement (DB, API, embeddings, UI, search)."</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Council + Cost — stacked, max 720px wide -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Council card -->
+          <div class="chart-card" style="margin-bottom:0;">
+            <div class="chart-title">SFDC Council — 5 Independent Reviewers</div>
+            <div class="chart-subtitle">Each workflow output reviewed by 5 AI models independently before converging. Min quorum: 3/5.</div>
+            <table style="width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;">
+              <thead>
+                <tr style="background:var(--navy);color:#fff;">
+                  <th style="padding:10px 14px;text-align:left;">Reviewer</th>
+                  <th style="padding:10px 14px;text-align:left;">Model</th>
+                  <th style="padding:10px 14px;text-align:left;">Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;">Claude Code</td><td style="padding:10px 14px;">Lead reviewer</td><td style="padding:10px 14px;">Full codebase access, reads actual files</td></tr>
+                <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;">Claude Opus 4.7</td><td style="padding:10px 14px;">claude-opus-4-7</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;">Claude Sonnet 4.6</td><td style="padding:10px 14px;">claude-sonnet-4-6</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+                <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);"><td style="padding:10px 14px;font-weight:600;">GPT-5</td><td style="padding:10px 14px;">gpt-5</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+                <tr><td style="padding:10px 14px;font-weight:600;">Gemini 2.5 Pro</td><td style="padding:10px 14px;">gemini-2.5-pro</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:12px;color:var(--muted);margin-top:12px;">Gateway: LLMGateway Express · eng-ai-model-gateway.sfproxy.devx-preprod.aws.sfdc.cl</p>
+          </div>
+
+          <!-- Cost card -->
+          <div class="chart-card" style="margin-bottom:0;">
+            <div class="chart-title">Cost Methodology</div>
+            <div class="chart-subtitle">Estimated from agent token usage · Claude Opus 4.7 pricing</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;margin-bottom:20px;">
+              <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Input Tokens</div>
+                <div style="font-size:28px;font-weight:800;color:var(--navy);">$15<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+              </div>
+              <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Output Tokens</div>
+                <div style="font-size:28px;font-weight:800;color:var(--navy);">$75<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+              </div>
+              <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Blended Rate</div>
+                <div style="font-size:28px;font-weight:800;color:var(--navy);">$36<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px;">65% input · 35% output</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div style="background:#EEF4FF;border-radius:8px;padding:14px 18px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px;">Comparison Scenarios (S1–S4)</div>
+                <div style="font-size:22px;font-weight:800;color:var(--navy);">$67.67 <span style="font-size:13px;font-weight:500;color:var(--muted)">total</span></div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;">InnerLoop $28.74 · Direct $16.48 · ShipIt $22.46</div>
+              </div>
+              <div style="background:#EEF4FF;border-radius:8px;padding:14px 18px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px;">Full Session Estimate</div>
+                <div style="font-size:22px;font-weight:800;color:var(--navy);">$150–300+</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px;">Includes planning, UX, council reviews, website builds</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /stacked cards -->
+
+      </div><!-- /page-section-inner -->
+    </div><!-- /page-section -->
+  </div><!-- /page-body -->
+</section>
+
+<!-- ══════════════ COST ══════════════ -->
+<section class="tab-section" id="tab-cost">
+  <div class="page-body">
+    <div class="page-section"><div class="page-section-inner">
+
+      <div class="section-heading">Cost &amp; Token Analysis</div>
+      <div class="section-sub">Estimated from actual agent token usage · Claude Opus 4.7: $15/M input, $75/M output, ~$36/M blended</div>
+
+      <!-- Total cost summary -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px;">
+        <div class="kpi-card" style="border-top-color:var(--il);">
+          <div class="kpi-label">InnerLoop — Total</div>
+          <div class="kpi-value">$28.74</div>
+          <div class="kpi-sub">Across all 4 scenarios</div>
+          <div class="kpi-badge" style="background:#FEE2E2;color:var(--error);">↑ Most expensive</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--dir);">
+          <div class="kpi-label">Direct — Total</div>
+          <div class="kpi-value">$16.47</div>
+          <div class="kpi-sub">Across all 4 scenarios</div>
+          <div class="kpi-badge">↓ Cheapest overall</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--si);">
+          <div class="kpi-label">ShipIt — Total</div>
+          <div class="kpi-value">$22.46</div>
+          <div class="kpi-sub">Across all 4 scenarios (incl. S2 re-run)</div>
+          <div class="kpi-badge" style="background:#FEF3C7;color:var(--warning);">Mid-range</div>
+        </div>
+      </div>
+
+      <!-- Cost overview chart -->
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div class="chart-title">Cost by Scenario</div>
+        <div class="chart-subtitle">Per-scenario API cost at $36/M blended · bars show each workflow</div>
+        <div class="chart-legend" style="margin-bottom:16px;">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--il)"></div>InnerLoop</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--dir)"></div>Direct</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--si)"></div>ShipIt</div>
+        </div>
+        <div class="chart-wrap"><canvas id="costChart"></canvas></div>
+      </div>
+
+      <!-- Per-scenario breakdown table -->
+      <div class="chart-card" style="margin-bottom:24px;padding:0;overflow:hidden;">
+        <div style="padding:24px 28px 16px;">
+          <div class="chart-title">Cost Breakdown by Scenario</div>
+          <div class="chart-subtitle">All figures estimated · $36/M blended token rate</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:12px 20px;text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;">Scenario</th>
+              <th style="padding:12px 20px;text-align:center;font-weight:600;"><span style="color:rgba(255,255,255,.7)">🔬</span> InnerLoop</th>
+              <th style="padding:12px 20px;text-align:center;font-weight:600;"><span style="color:rgba(255,255,255,.7)">⚡</span> Direct</th>
+              <th style="padding:12px 20px;text-align:center;font-weight:600;"><span style="color:rgba(255,255,255,.7)">🚀</span> ShipIt</th>
+              <th style="padding:12px 20px;text-align:center;font-weight:600;background:rgba(255,255,255,.08);">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:12px 20px;font-weight:600;color:var(--navy);">S1 — Open Task</td>
+              <td style="padding:12px 20px;text-align:center;">$5.08</td>
+              <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">$4.13</td>
+              <td style="padding:12px 20px;text-align:center;">$5.51</td>
+              <td style="padding:12px 20px;text-align:center;font-weight:600;background:#EEF4FF;">$14.72</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:12px 20px;font-weight:600;color:var(--navy);">S2 — Bug Fix</td>
+              <td style="padding:12px 20px;text-align:center;">$4.39</td>
+              <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">$4.34</td>
+              <td style="padding:12px 20px;text-align:center;">$7.98<span style="font-size:10px;color:var(--muted);display:block;">2 runs</span></td>
+              <td style="padding:12px 20px;text-align:center;font-weight:600;background:#EEF4FF;">$16.71</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:12px 20px;font-weight:600;color:var(--navy);">S3 — Work Item W-21632772</td>
+              <td style="padding:12px 20px;text-align:center;">$4.60</td>
+              <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">$3.64</td>
+              <td style="padding:12px 20px;text-align:center;">$4.58</td>
+              <td style="padding:12px 20px;text-align:center;font-weight:600;background:#EEF4FF;">$12.82</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:2px solid var(--border);">
+              <td style="padding:12px 20px;font-weight:600;color:var(--navy);">S4 — Second Brain Feature</td>
+              <td style="padding:12px 20px;text-align:center;color:var(--error);font-weight:700;">$14.67</td>
+              <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">$4.36</td>
+              <td style="padding:12px 20px;text-align:center;">$4.39</td>
+              <td style="padding:12px 20px;text-align:center;font-weight:600;background:#EEF4FF;">$23.42</td>
+            </tr>
+            <tr style="background:var(--navy);">
+              <td style="padding:14px 20px;font-weight:800;color:#fff;">TOTAL</td>
+              <td style="padding:14px 20px;text-align:center;font-weight:800;color:#fff;">$28.74</td>
+              <td style="padding:14px 20px;text-align:center;font-weight:800;color:var(--accent);">$16.47</td>
+              <td style="padding:14px 20px;text-align:center;font-weight:800;color:#fff;">$22.46</td>
+              <td style="padding:14px 20px;text-align:center;font-weight:800;color:var(--accent);">$67.67</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Key insight -->
+      <div class="chart-card" style="border-top-color:var(--dir);">
+        <div class="chart-title">Key Cost Insight</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+          <div style="padding:16px;background:var(--light-bg);border-radius:8px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:6px;">InnerLoop S4 Spike</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.6;">S4 cost $14.67 for InnerLoop vs $4.36 for Direct — InnerLoop's 5 parallel agents + council review consumed 3.4× more tokens on the complex feature build.</div>
+          </div>
+          <div style="padding:16px;background:var(--light-bg);border-radius:8px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:6px;">Cost Spread</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.6;">$28.73 − $16.48 = <strong>$12.25 difference</strong> between most and least expensive across all 4 scenarios. Cost is not the primary differentiator — quality is.</div>
+          </div>
+        </div>
+      </div>
+
+    </div></div>
+  </div>
+</section>
+
+</body>
+</html>

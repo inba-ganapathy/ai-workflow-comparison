@@ -8,10 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-// Cost by scenario chart
-const costCtx = document.getElementById('costChart');
-if (costCtx) {
-  new Chart(costCtx.getContext('2d'), {
+// Cost by scenario chart — lazy init when tab shown
+let costChartInstance = null;
+function initCostChart() {
+  if (costChartInstance) return;
+  const costCtx = document.getElementById('costChart');
+  if (!costCtx) return;
+  costChartInstance = new Chart(costCtx.getContext('2d'), {
     type: 'bar',
     data: {
       labels: ['S1 — Open Task', 'S2 — Bug Fix', 'S3 — Work Item', 'S4 — Feature'],
@@ -1375,6 +1378,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-' + target).classList.add('active');
+    if (target === 'cost') setTimeout(initCostChart, 50);
   });
 });
 

@@ -7,32 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-// Cost by scenario chart — lazy init when tab shown
-let costChartInstance = null;
-function initCostChart() {
-  if (costChartInstance) return;
-  const costCtx = document.getElementById('costChart');
-  if (!costCtx) return;
-  costChartInstance = new Chart(costCtx.getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: ['S1 — Open Task', 'S2 — Bug Fix', 'S3 — Work Item', 'S4 — Feature'],
-      datasets: [
-        { label: 'InnerLoop', data: [5.08, 4.39, 4.60, 14.67], backgroundColor: '#032D60', borderRadius: 4, borderSkipped: false },
-        { label: 'Direct',    data: [4.13, 4.34, 3.64, 4.36],  backgroundColor: '#0176D3', borderRadius: 4, borderSkipped: false },
-        { label: 'ShipIt',    data: [5.51, 7.98, 4.58, 4.39],  backgroundColor: '#0B827C', borderRadius: 4, borderSkipped: false }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(2) } } },
-      scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { callback: v => '$' + v } }, x: { grid: { display: false } } }
-    }
-  });
-}
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1454,73 +1429,6 @@ new Chart(councilCtx, {
     }
   }
 });
-
-// Cost chart
-const costCtx = document.getElementById('costChart').getContext('2d');
-new Chart(costCtx, {
-  type: 'bar',
-  data: {
-    labels: ['S1 — Simple Bug Fix', 'S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
-    datasets: [
-      {
-        label: 'InnerLoop',
-        data: [5.08, 4.39, 4.60, 14.67],
-        backgroundColor: '#032D60',
-        borderRadius: 6,
-        borderSkipped: false,
-      },
-      {
-        label: 'Direct',
-        data: [4.13, 4.34, 3.64, 4.36],
-        backgroundColor: '#0176D3',
-        borderRadius: 6,
-        borderSkipped: false,
-      },
-      {
-        label: 'ShipIt',
-        data: [5.51, 7.98, 4.58, 4.39],
-        backgroundColor: '#0B827C',
-        borderRadius: 6,
-        borderSkipped: false,
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: '#fff',
-        titleColor: '#032D60',
-        bodyColor: '#5A6977',
-        borderColor: '#D8E3F0',
-        borderWidth: 1,
-        padding: 12,
-        callbacks: {
-          label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        border: { display: false },
-        ticks: { font: { size: 13, weight: '500' }, color: '#5A6977' }
-      },
-      y: {
-        grid: { color: '#F2F5FA' },
-        border: { display: false },
-        min: 0,
-        ticks: {
-          font: { size: 12 },
-          callback: v => '$' + v.toFixed(0)
-        }
-      }
-    }
-  }
-});
-</script>
 
 <!-- ══════════════ METHODOLOGY ══════════════ -->
 <section class="tab-section" id="tab-methodology">

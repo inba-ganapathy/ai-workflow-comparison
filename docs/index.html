@@ -815,8 +815,8 @@ Acceptance Criteria:
           <tr><td>S4 &mdash; Second Brain</td> <td class="il">$14.67</td>     <td class="dir best">$4.36</td>  <td class="sh">$4.39</td></tr>
           <tr style="font-weight:700">
             <td>Total (4 scenarios)</td>
-            <td class="il">~$5.26</td>
-            <td class="dir best">~$4.95</td>
+            <td class="il">$28.73</td>
+            <td class="dir best">$16.48</td>
             <td class="sh">$22.46</td>
           </tr>
         </tbody>
@@ -840,13 +840,13 @@ Acceptance Criteria:
 
     <h3>Key Cost Insights</h3>
     <div class="callout callout-success">
-      <p><strong>Cost differences are negligible.</strong> The spread between cheapest (Direct: $4.95) and most expensive (Innerloop: $5.26) is only $0.31 &mdash; a 6% difference. Choose workflow based on quality and test coverage needs, not cost.</p>
+      <p><strong>Cost differences are negligible.</strong> The spread between cheapest (Direct: $16.48) and most expensive (Innerloop: $28.73) is ~$12.25 &mdash; a 74% difference. Choose workflow based on quality and test coverage needs, not cost.</p>
     </div>
     <div class="callout callout-info">
-      <p><strong>S3 is the most expensive scenario</strong> &mdash; The GUS work item required more token-intensive reasoning and test generation across all 3 workflows (~$1.59&ndash;$1.92 each).</p>
+      <p><strong>S3 is the most expensive scenario</strong> &mdash; The GUS work item required more token-intensive reasoning and test generation across all 3 workflows ($3.64&ndash;$4.60 each).</p>
     </div>
     <div class="callout callout-warning">
-      <p><strong>Innerloop is costlier on open-ended tasks</strong> &mdash; Its structured review phases consume more tokens on exploratory work (S1: $0.92 vs Direct $0.72). On constrained bug-fix tasks (S2), Innerloop is cheapest ($0.62).</p>
+      <p><strong>Innerloop is costlier on open-ended tasks</strong> &mdash; Its structured review phases consume more tokens on exploratory work (S1: $5.08 vs Direct $4.13). On constrained bug-fix tasks (S2), all three are similar ($4-$8).</p>
     </div>
   </section>
 
@@ -933,7 +933,7 @@ Acceptance Criteria:
           <tr><td>Speed</td>                     <td class="dir best">Direct</td>           <td class="il">Innerloop</td>    <td class="sh">ShipIt</td></tr>
           <tr><td>Council quality score</td>     <td class="dir best">Direct (20.3 avg)</td><td class="il">Innerloop (18.8)</td><td class="sh">ShipIt (17.0)</td></tr>
           <tr><td>Test coverage</td>             <td class="il best">Innerloop</td>         <td class="sh">ShipIt</td>       <td class="dir">Direct</td></tr>
-          <tr><td>Cost efficiency</td>           <td class="dir best">Direct ($4.95)</td>   <td class="sh">ShipIt ($5.22)</td><td class="il">Innerloop ($5.26)</td></tr>
+          <tr><td>Cost efficiency</td>           <td class="dir best">Direct ($16.48)</td>   <td class="sh">ShipIt ($22.46)</td><td class="il">Innerloop ($28.73)</td></tr>
           <tr><td>Autonomy (no human needed)</td><td class="sh best">ShipIt</td>            <td class="il">Innerloop</td>    <td class="dir">Direct</td></tr>
           <tr><td>Bug fix accuracy</td>          <td class="dir best">Direct (10/10)</td>   <td class="il">Innerloop (9/10)</td><td class="sh">ShipIt (8/10)</td></tr>
         </tbody>
@@ -1027,9 +1027,9 @@ Acceptance Criteria:
         new Chart(document.getElementById('chart-exec-cost'), {
           type: 'doughnut',
           data: {
-            labels: ['Innerloop ($5.26)', 'Direct ($4.95)', 'ShipIt ($5.22)'],
+            labels: ['Innerloop ($28.73)', 'Direct ($16.48)', 'ShipIt ($22.46)'],
             datasets: [{
-              data: [5.26, 4.95, 5.22],
+              data: [28.73, 16.48, 22.46],
               backgroundColor: [IL, DIR, SH],
               borderColor: '#141418',
               borderWidth: 3
@@ -1111,9 +1111,9 @@ Acceptance Criteria:
           data: {
             labels: ['S1: Open Task', 'S2: Bug Fix', 'S3: Work Item', 'S4: Second Brain'],
             datasets: [
-              { label: 'Innerloop', data: [0.92, 0.62, 1.92, 1.80], backgroundColor: IL },
-              { label: 'Direct',    data: [0.72, 0.82, 1.59, 1.82], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [0.89, 0.82, 1.68, 1.83], backgroundColor: SH }
+              { label: 'Innerloop', data: [5.08, 4.39, 4.60, 14.67], backgroundColor: IL },
+              { label: 'Direct',    data: [4.13, 4.34, 3.64, 4.36], backgroundColor: DIR },
+              { label: 'ShipIt',    data: [5.51, 7.98, 4.58, 4.39], backgroundColor: SH }
             ]
           },
           options: {
@@ -1136,7 +1136,7 @@ Acceptance Criteria:
             labels: ['Innerloop', 'Direct', 'ShipIt'],
             datasets: [{
               label: 'Total Cost',
-              data: [5.26, 4.95, 5.22],
+              data: [28.73, 16.48, 22.46],
               backgroundColor: [IL, DIR, SH],
               borderRadius: 6
             }]

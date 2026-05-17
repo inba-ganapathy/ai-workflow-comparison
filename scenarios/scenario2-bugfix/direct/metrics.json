@@ -1,0 +1,9 @@
+{
+  "scenario": "2-bugfix", "workflow": "direct",
+  "start_time": "2026-05-17T15:16:28Z", "end_time": "2026-05-17T15:32:10Z",
+  "elapsed_seconds": 942, "tool_calls_total": 32,
+  "bugs_fixed": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "bugs_missed": [],
+  "tests_written": 1, "tests_passing": 25,
+  "python_syntax_ok": true, "typescript_ok": true
+}

@@ -1,0 +1,36 @@
+{
+  "scenario": "2-bugfix",
+  "workflow": "shipit",
+  "mode": "sequential-no-agent-teams",
+  "start_time": "2026-05-17T15:16:28Z",
+  "end_time": "2026-05-17T15:50:00Z",
+  "elapsed_seconds": 2012,
+  "tool_calls_total": 38,
+  "phases_completed": [
+    "Phase 1 - Analyst (battle plan)",
+    "Phase 2 - Backend Engineer TDD",
+    "Phase 3 - Frontend Engineer",
+    "Phase 4 - Reviewer (zero context)",
+    "Phase 5 - QA Validator"
+  ],
+  "review_score": 24,
+  "bugs_fixed": [
+    "Bug 4: get_or_create_conversation phantom repo creation (db.py)",
+    "Bug 9: plan_cancelled WS handler drops plan if not in store (store/index.ts)",
+    "Bug 10: managerStatus stuck on error in sendMessage (ManagerChat.tsx)"
+  ],
+  "bugs_missed": [
+    "Bug 1 (PlanApprovalBody/logger): Already fixed in working tree",
+    "Bug 2 (_pending_clarification race): Already fixed in working tree",
+    "Bug 3 (deprecated route unreachable): Not present in working tree",
+    "Bug 5 (plan_started drops plan): Already handled with API fallback in working tree",
+    "Bug 6 (_match_repo missing realpath/sep): Already fixed in working tree",
+    "Bug 7 (approve_plan no done_callback): Already fixed in working tree",
+    "Bug 8 (REPO_CACHE_TTL=30): Already fixed in working tree (value is 5.0)"
+  ],
+  "tests_written": 3,
+  "tests_passing": 33,
+  "python_syntax_ok": true,
+  "typescript_ok": true,
+  "agent_teams_available": false
+}

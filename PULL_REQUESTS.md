@@ -18,3 +18,10 @@ All PRs are draft — base branch is the pre-implementation baseline in each cas
 
 *Note: ShipIt PRs used `--no-verify` to bypass pre-commit hooks that fail due to pre-existing
 environment issues (missing llama_index/defusedxml — unrelated to the study changes).*
+
+## Scenario 2 — Bug Fix (10 pre-identified bugs, claude-talk)
+| Workflow | PR | Council Score | Bugs Fixed |
+|----------|-----|---------------|-----------|
+| 🔬 Innerloop | [PR #4](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4) | 17/25 | 9/10 |
+| ⚡ Direct | [PR #5](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5) | 18/25 | 10/10 |
+| 🚀 ShipIt | [PR #6](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6) | 11/25 | **0/10** (evidence only) |

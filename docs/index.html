@@ -1,35 +1,4 @@
-<!DOC
-      <!-- Council Review Callout Banner -->
-      <div style="margin:24px 0 32px;background:linear-gradient(135deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.03) 100%);border:1px solid rgba(255,255,255,0.18);border-radius:14px;padding:28px 32px;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(1,118,211,0.25) 0%,transparent 70%);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:-40px;left:15%;width:240px;height:160px;background:radial-gradient(circle,rgba(11,130,124,0.15) 0%,transparent 70%);pointer-events:none;"></div>
-        <div style="display:flex;align-items:flex-start;gap:20px;position:relative;">
-          <div style="flex-shrink:0;width:44px;height:44px;background:linear-gradient(135deg,#0176D3,#0b827c);border-radius:12px;display:flex;align-items:center;justify-content:center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <div style="flex:1;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
-              <span style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:-.02em;line-height:1.2;">No Single Workflow Catches Everything. Parallel Coverage Does.</span>
-              <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(90deg,#0176D3,#0b827c);color:#fff;padding:3px 10px;border-radius:20px;white-space:nowrap;">Empirical Finding</span>
-            </div>
-            <p style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:16px;max-width:720px;">This study ran 3 structured AI workflows across 4 scenarios — all three independently missed bugs the others caught. Not because the workflows were bad, but because <strong style="color:#fff;">any single perspective has blind spots</strong>. Running 5 models in parallel doesn't require any one model to be authoritative — it exploits coverage through diversity. The bugs that slip past one model rarely slip past all five. At <strong style="color:#7dd3fc;">~5 min and ~$0.50 per run</strong>, this is the cheapest union operation available before a merge.</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:8px 14px;">
-                <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
-                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#fff;">~5 min</strong> per council review</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:8px 14px;">
-                <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
-                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#fff;">~$0.50</strong> · 5 models in parallel</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;background:rgba(1,118,211,0.2);border:1px solid rgba(1,118,211,0.35);border-radius:8px;padding:8px 14px;">
-                <div style="width:6px;height:6px;border-radius:50%;background:#60a5fa;flex-shrink:0;"></div>
-                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#7dd3fc;">Recommended:</strong> pre-merge standard for non-trivial changes</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>TYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -753,10 +722,202 @@
   <button class="tab-btn" data-tab="cost">Cost</button>
 </nav>
 
-
 <!-- ══════════════ SUMMARY ══════════════ -->
 <section class="tab-section active" id="tab-summary">
   <div class="page-body"><div class="page-section"><div class="page-section-inner">
+
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-num">1</div>
+        <span class="hero-eyebrow-label">Executive Summary &nbsp;·&nbsp; May 2026</span>
+      </div>
+      <div class="hero-title">AI Workflow Benchmark: Innerloop vs Direct vs ShipIt</div>
+      <!-- Council Review Callout Banner -->
+      <div style="margin:22px 0 28px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.18);border-radius:14px;padding:24px 28px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(1,118,211,0.25) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-40px;left:15%;width:240px;height:160px;background:radial-gradient(circle,rgba(11,130,124,0.15) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="display:flex;align-items:flex-start;gap:20px;position:relative;">
+          <div style="flex-shrink:0;width:44px;height:44px;background:linear-gradient(135deg,#0176D3,#0b827c);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+              <span style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:-.02em;line-height:1.2;">Every Workflow Has a Blind Spot. The Council Doesn&#39;t.</span>
+              <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(90deg,#0176D3,#0b827c);color:#fff;padding:3px 10px;border-radius:20px;white-space:nowrap;">Key Insight</span>
+            </div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:16px;max-width:720px;">Each workflow independently missed findings the others caught — proven across S1–S4. Running 5 models in parallel exploits <strong style="color:#fff;">coverage through diversity</strong>, not any single model&#39;s intelligence. The bugs that slip past one rarely slip past all five. At <strong style="color:#7dd3fc;">~5 min and ~$0.50 per run</strong>, it is the cheapest union operation available before a merge.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:8px 14px;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#fff;">~5 min</strong> per council review</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:8px 14px;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#fff;">~$0.50</strong> · 5 models in parallel</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;background:rgba(1,118,211,0.2);border:1px solid rgba(1,118,211,0.35);border-radius:8px;padding:8px 14px;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#60a5fa;flex-shrink:0;"></div>
+                <span style="font-size:12px;color:rgba(255,255,255,0.85);"><strong style="color:#7dd3fc;">Recommended:</strong> pre-merge standard for non-trivial changes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="hero-desc">Benchmark across 4 engineering scenarios (S1–S4), 3 AI workflows, measuring quality (council score), speed (minutes), and cost (API spend). Single-run measurements per workflow per scenario.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;">
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#93c5fd;">Innerloop</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">Structured 3-phase:</strong> Investigate → Plan → Execute → Review. Dedicated subagents per phase. TDD enforced.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(27,150,255,0.25);border:1px solid rgba(27,150,255,0.4);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#7dd3fc;">Direct Implementation</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">No structured workflow:</strong> Read files → identify bugs → fix → verify. Single agent, no phases, no review pass.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(11,130,124,0.3);border:1px solid rgba(11,130,124,0.5);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#5eead4;">Ship-It Style</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">One command. One work item. One PR.</strong> Specialist agent pipeline: Analyst → Engineer → Reviewer → Validator. Requires Agent Teams (TeamCreate + SendMessage).</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5);">Clear Winner</div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:8px 20px;">
+          <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em;">Direct Implementation excels across most scenarios</span>
+          <span style="font-size:12px;background:var(--success);color:#fff;padding:3px 10px;border-radius:20px;font-weight:700;">Recommended</span>
+        </div>
+      </div>
+      <div class="kpi-row" style="margin-bottom:0;">
+        <div class="kpi-card">
+          <div class="kpi-label">Top Council Score</div>
+          <div class="kpi-value">20.3</div>
+          <div class="kpi-sub" >Direct Implementation average</div>
+          <div class="kpi-badge">↑ Best overall</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--success);">
+          <div class="kpi-label">Fastest Workflow</div>
+          <div class="kpi-value">3.3<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S1 (simple task)</div>
+          <div class="kpi-badge">↑ 12× faster than ShipIt (S1)</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--warning);">
+          <div class="kpi-label">Most Economical</div>
+          <div class="kpi-value">$16</div>
+          <div class="kpi-sub" >Direct total across 4 scenarios</div>
+          <div class="kpi-badge">↓ $12.27 vs InnerLoop</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--il);">
+          <div class="kpi-label">Speed Winner S4</div>
+          <div class="kpi-value">10<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S4 (complex feature)</div>
+          <div class="kpi-badge">↑ ~3× faster than InnerLoop†</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Council Scores by Scenario</div>
+      <div class="chart-subtitle">SFDC Council review scores per scenario (max 25) — S1: ShipIt wins, S2–S4: Direct wins</div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--il)"></div>InnerLoop</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dir)"></div>Direct</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--si)"></div>ShipIt</div>
+      </div>
+      <div class="chart-wrap"><canvas id="councilChart"></canvas></div>
+    </div>
+
+    <div style="margin-bottom:48px;">
+      <div class="section-heading" style="margin-bottom:8px;">Overall Ranking by Dimension</div>
+      <div class="section-sub">Six dimensions — who wins each</div>
+<!-- Overall ranking table — corrected data -->
+      <div class="chart-card" style="margin-bottom:0;padding:0;overflow:hidden;">
+        <div style="padding:20px 24px 12px;"><div class="chart-title">Overall Ranking by Dimension</div></div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:11px 20px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Dimension</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">1st</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">2nd</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">3rd</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Speed</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">Direct</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">ShipIt</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Council quality score</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">Direct (20.3 avg)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">InnerLoop (18.3)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">ShipIt (15.0)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Test coverage</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Cost efficiency</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">Direct ($16.48)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">ShipIt ($22.46)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">InnerLoop ($28.73)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Autonomy (no human gates)</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;">
+              <td style="padding:11px 20px;font-weight:500;">Bug fix accuracy</td>
+              <td style="padding:11px 20px;text-align:center;font-weight:700;color:var(--navy);">Direct (10/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">InnerLoop (9/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--muted);">ShipIt (10/10 re-run)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+        <!-- Council Review Callout Banner — PRIMARY FINDING -->
+    <div style="margin-bottom:32px;background:linear-gradient(135deg,#0a1628 0%,#032D60 60%,#0b3d6e 100%);border-radius:16px;padding:36px 40px;border:1px solid rgba(255,255,255,0.12);position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(1,118,211,0.3) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:-60px;left:20%;width:300px;height:200px;background:radial-gradient(circle,rgba(11,130,124,0.2) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="display:flex;align-items:flex-start;gap:24px;position:relative;">
+        <div style="flex-shrink:0;width:52px;height:52px;background:linear-gradient(135deg,#0176D3,#0b827c);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+            <span style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-.02em;line-height:1.2;">Every Workflow Has a Blind Spot. The Council Doesn't.</span>
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(90deg,#0176D3,#0b827c);color:#fff;padding:4px 12px;border-radius:20px;white-space:nowrap;">Key Insight</span>
+          </div>
+          <p style="font-size:14px;color:rgba(255,255,255,0.78);line-height:1.7;margin-bottom:20px;max-width:760px;">The workflow you pick matters less than whether you add a council review step before merge. Each workflow independently missed findings the others caught — InnerLoop, Direct, and ShipIt all have complementary blind spots across S1–S4. A <strong style="color:#fff;">5-model SFDC Council review</strong> catches the union of all findings. At <strong style="color:#7dd3fc;">~5 minutes and ~$0.50 per run</strong>, it is the highest-ROI quality gate available today.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 18px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+              <span style="font-size:13px;color:rgba(255,255,255,0.9);"><strong style="color:#fff;">~5 min</strong> per full council review</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 18px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+              <span style="font-size:13px;color:rgba(255,255,255,0.9);"><strong style="color:#fff;">~$0.50</strong> per review · 5 models in parallel</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(1,118,211,0.25);border:1px solid rgba(1,118,211,0.4);border-radius:10px;padding:12px 18px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#60a5fa;flex-shrink:0;"></div>
+              <span style="font-size:13px;color:rgba(255,255,255,0.9);"><strong style="color:#7dd3fc;">Recommended:</strong> pre-merge standard for non-trivial changes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="section-heading" style="margin-top:8px;margin-bottom:8px;">Three Workflow Findings</div>
     <div class="section-sub" style="margin-bottom:32px;">What the data tells us about when to reach for each workflow</div>
 

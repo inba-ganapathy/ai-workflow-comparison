@@ -782,6 +782,64 @@
     <div class="section-heading">Three Decisive Findings</div>
     <div class="section-sub">What the data tells us for strategic workflow selection</div>
 
+
+    <div style="margin-bottom:48px;">
+      <div class="section-heading" style="margin-bottom:8px;">Overall Ranking by Dimension</div>
+      <div class="section-sub">Six dimensions — who wins each</div>
+<!-- Overall ranking table — corrected data -->
+      <div class="chart-card" style="margin-bottom:0;padding:0;overflow:hidden;">
+        <div style="padding:20px 24px 12px;"><div class="chart-title">Overall Ranking by Dimension</div></div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--navy);color:#fff;">
+              <th style="padding:11px 20px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Dimension</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">1st</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">2nd</th>
+              <th style="padding:11px 20px;text-align:center;font-weight:700;">3rd</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Speed</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Council quality score</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (20.3 avg)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (18.3)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (15.0)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Test coverage</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);font-weight:700;">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Cost efficiency</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct ($16.48)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt ($22.46)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop ($28.73)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:11px 20px;font-weight:500;">Autonomy (no human gates)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);font-weight:700;">ShipIt</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
+            </tr>
+            <tr style="background:#f9f9f9;">
+              <td style="padding:11px 20px;font-weight:500;">Bug fix accuracy</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (10/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (9/10)</td>
+              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (8/10 re-run)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="findings-stack">
       <div class="finding-card" style="border-left-color: var(--success);">
         <div class="finding-number">01</div>
@@ -1221,58 +1279,6 @@
         </table>
       </div>
 
-      <!-- Overall ranking table — corrected data -->
-      <div class="chart-card" style="margin-bottom:24px;padding:0;overflow:hidden;">
-        <div style="padding:20px 24px 12px;"><div class="chart-title">Overall Ranking by Dimension</div></div>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead>
-            <tr style="background:var(--navy);color:#fff;">
-              <th style="padding:11px 20px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Dimension</th>
-              <th style="padding:11px 20px;text-align:center;font-weight:700;">1st</th>
-              <th style="padding:11px 20px;text-align:center;font-weight:700;">2nd</th>
-              <th style="padding:11px 20px;text-align:center;font-weight:700;">3rd</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:11px 20px;font-weight:500;">Speed</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
-            </tr>
-            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
-              <td style="padding:11px 20px;font-weight:500;">Council quality score</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (20.3 avg)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (18.3)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (15.0)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:11px 20px;font-weight:500;">Test coverage</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);font-weight:700;">InnerLoop</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
-            </tr>
-            <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
-              <td style="padding:11px 20px;font-weight:500;">Cost efficiency</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct ($16.48)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt ($22.46)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop ($28.73)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:11px 20px;font-weight:500;">Autonomy (no human gates)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);font-weight:700;">ShipIt</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);">Direct</td>
-            </tr>
-            <tr style="background:#f9f9f9;">
-              <td style="padding:11px 20px;font-weight:500;">Bug fix accuracy</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--dir);font-weight:700;">Direct (10/10)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--il);">InnerLoop (9/10)</td>
-              <td style="padding:11px 20px;text-align:center;color:var(--si);">ShipIt (8/10 re-run)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
       <!-- 3 recommendation cards -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">

@@ -1,0 +1,20 @@
+{
+  "scenario": "4-secondbrain",
+  "workflow": "shipit",
+  "mode": "sequential-no-agent-teams",
+  "start_time": "2026-05-17T01:15:00Z",
+  "elapsed_seconds": 667,
+  "elapsed_minutes": 11.1,
+  "tool_calls_total": 52,
+  "phases_completed": ["analyst", "backend-engineer", "frontend-engineer", "reviewer", "qa-validator"],
+  "review_score": 23,
+  "files_created": ["db/migrations/0008_second_brain.sql", "claude_talk/db.py (notes section)", "claude_talk/routers/notes.py", "frontend/src/App.tsx (notes tab)", "frontend/src/types.ts (Note types)", "frontend/src/store/index.ts (NotesSlice)", "frontend/src/components/notes/NotesShell.tsx", "frontend/src/lib/notesApi.ts", "tests/test_notes.py"],
+  "lines_added": 1200,
+  "tests_written": 23,
+  "tests_passing": 19,
+  "typescript_ok": true,
+  "council_score": 17,
+  "council_score_breakdown": {"schema_quality": 3, "api_completeness": 4, "frontend_quality": 3, "test_coverage": 4, "integration": 3},
+  "agent_teams_available": false,
+  "features": {"notes_crud": true, "fts_search": true, "second_brain_tab": true, "embedding_semantic": false, "ask_claude": true, "folders": false, "backlinks": false, "daily_notes": false, "versions": false}
+}

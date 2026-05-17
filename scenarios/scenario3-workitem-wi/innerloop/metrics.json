@@ -1,0 +1,23 @@
+{
+  "scenario": "3-workitem-W21632772",
+  "workflow": "innerloop",
+  "wi": "W-21632772",
+  "wi_subject": "Parameterize output for loops in structured data",
+  "repo": "beethoven (GenUI Services)",
+  "start_time": "2026-05-17T07:21:37Z",
+  "end_time": "2026-05-17T07:25:11Z",
+  "elapsed_seconds": 214,
+  "elapsed_minutes": 3.6,
+  "tool_calls_total": 17,
+  "phases": {"investigate_sec": 90, "plan_sec": 10, "implement_sec": 80, "verify_sec": 24, "review_sec": 10},
+  "files_changed": ["genui/processing/data_binding.py", "genui/processing/__init__.py", "tests/unit/test_genui/processing/test_data_binding.py"],
+  "lines_added": 536,
+  "lines_removed": 0,
+  "tests_written": 9,
+  "tests_passing": 940,
+  "baseline_tests": 931,
+  "council_score": 19,
+  "council_score_breakdown": {"ac_coverage": 4, "code_quality": 4, "architecture": 4, "test_depth": 4, "completeness": 3},
+  "ac1_met": true,
+  "ac2_met": true
+}

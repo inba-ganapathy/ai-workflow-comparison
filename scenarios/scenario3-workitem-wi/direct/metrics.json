@@ -1,0 +1,22 @@
+{
+  "scenario": "3-workitem-W21632772",
+  "workflow": "direct",
+  "wi": "W-21632772",
+  "wi_subject": "Parameterize output for loops in structured data",
+  "repo": "beethoven (GenUI Services)",
+  "start_time": "2026-05-17T07:20:49Z",
+  "end_time": "2026-05-17T07:45:00Z",
+  "elapsed_seconds": 1451,
+  "elapsed_minutes": 24.2,
+  "tool_calls_total": 30,
+  "files_changed": ["genui/processing/uem.py", "genui/tools/core_tools.py", "tests/unit/test_genui/processing/test_parameterization.py"],
+  "lines_added": 948,
+  "lines_removed": 1,
+  "tests_written": 45,
+  "tests_passing": 976,
+  "baseline_tests": 931,
+  "council_score": 22,
+  "council_score_breakdown": {"ac_coverage": 5, "code_quality": 5, "architecture": 4, "test_depth": 5, "completeness": 3},
+  "ac1_met": true,
+  "ac2_met": true
+}

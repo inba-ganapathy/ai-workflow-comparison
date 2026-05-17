@@ -1,0 +1,16 @@
+{
+  "scenario": "4-secondbrain",
+  "workflow": "direct",
+  "start_time": "2026-05-17T01:00:00Z",
+  "elapsed_seconds": 593,
+  "elapsed_minutes": 9.9,
+  "tool_calls_total": 61,
+  "files_created": ["db/migrations/0008_notes.sql", "claude_talk/db.py (notes section)", "claude_talk/routers/notes.py", "frontend/src/App.tsx (notes tab)", "frontend/src/types.ts (Note types)", "frontend/src/components/notes/NotesShell.tsx", "frontend/src/components/notes/NotesSidebar.tsx", "frontend/src/lib/notesApi.ts", "tests/test_notes.py"],
+  "lines_added": 1800,
+  "tests_written": 31,
+  "tests_passing": 31,
+  "typescript_ok": true,
+  "council_score": 21,
+  "council_score_breakdown": {"schema_quality": 5, "api_completeness": 5, "frontend_quality": 4, "test_coverage": 4, "integration": 3},
+  "features": {"notes_crud": true, "fts_search": true, "second_brain_tab": true, "embedding_semantic": false, "ask_claude": true, "folders": true, "backlinks": true, "daily_notes": true, "versions": true}
+}

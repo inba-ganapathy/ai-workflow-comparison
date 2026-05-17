@@ -1,0 +1,18 @@
+{
+  "scenario": "4-secondbrain",
+  "workflow": "innerloop",
+  "prompt": "Second Brain tab - personal knowledge base with notes, FTS, semantic search, Ask Claude",
+  "repo": "claude-talk",
+  "start_time": "2026-05-17T00:45:00Z",
+  "agents_used": ["investigator x4", "plan-auditor", "agent-A", "agent-B", "agent-C", "agent-D", "agent-E"],
+  "phases": ["investigate", "plan-audit", "implement-A", "implement-B", "implement-C", "implement-D", "implement-E", "verify"],
+  "tool_calls_total": 120,
+  "files_created": ["db/migrations/0008_second_brain.sql", "claude_talk/routers/notes.py", "claude_talk/notes_embedding.py", "claude_talk/schemas/notes.py", "frontend/src/components/notes/NotesShell.tsx", "frontend/src/components/notes/index.ts", "frontend/src/lib/notesApi.ts", "tests/test_notes_db.py", "tests/test_notes_api.py", "tests/test_notes_embedding.py", "tests/test_notes_frontend_integration.py"],
+  "lines_added": 1400,
+  "tests_written": 57,
+  "tests_passing": 57,
+  "typescript_ok": true,
+  "council_score": 19,
+  "council_score_breakdown": {"schema_quality": 4, "api_completeness": 4, "frontend_quality": 4, "test_coverage": 4, "integration": 3},
+  "features": {"notes_crud": true, "fts_search": true, "second_brain_tab": true, "embedding_semantic": true, "ask_claude": true, "folders": false, "backlinks": false, "daily_notes": false, "versions": false}
+}

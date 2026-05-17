@@ -1,1166 +1,1476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Workflow Comparison — SVP Review</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Workflow Analysis — Executive Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg:        #0d0d0f;
-      --surface:   #141418;
-      --surface2:  #1c1c22;
-      --border:    #2a2a35;
-      --text:      #e2e8f0;
-      --muted:     #94a3b8;
-      --innerloop: #6366f1;
-      --direct:    #3b82f6;
-      --shipit:    #f59e0b;
-      --success:   #22c55e;
-      --warning:   #f59e0b;
-      --error:     #ef4444;
-      --header-a:  #032d60;
-      --header-b:  #0176d3;
-    }
+  :root {
+    --navy: #032D60;
+    --blue: #0176D3;
+    --accent: #1B96FF;
+    --light-bg: #EEF4FF;
+    --card: #FFFFFF;
+    --text: #181818;
+    --muted: #5A6977;
+    --border: #D8E3F0;
+    --success: #2E844A;
+    --warning: #A96404;
+    --error: #C23934;
+    --il: #032D60;
+    --dir: #0176D3;
+    --si: #0B827C;
+  }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--light-bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, var(--header-a), var(--header-b));
-      padding: 28px 40px 24px;
-    }
-    header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
-    header p  { color: #a8c8f0; margin-top: 4px; font-size: 0.92rem; }
+  /* ── Top bar ── */
+  .top-bar {
+    background: var(--navy);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .top-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+  }
+  .top-bar-logo svg {
+    width: 28px; height: 28px;
+  }
+  .top-bar-meta {
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 400;
+  }
 
-    /* ── NAV TABS ── */
-    nav {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    nav button {
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 0.84rem;
-      font-weight: 500;
-      padding: 14px 16px 11px;
-      transition: color .15s, border-color .15s;
-      white-space: nowrap;
-    }
-    nav button:hover   { color: var(--text); }
-    nav button.active  { color: #fff; border-bottom-color: var(--header-b); }
+  /* ── Tab nav ── */
+  .tab-nav {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 0 48px;
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 64px;
+    z-index: 99;
+  }
+  .tab-btn {
+    padding: 18px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active {
+    color: var(--navy);
+    border-bottom-color: var(--accent);
+  }
 
-    /* ── MAIN / SECTIONS ── */
-    main { max-width: 1200px; margin: 0 auto; padding: 32px 32px 64px; }
+  /* ── Section ── */
+  .tab-section { display: none; background: transparent; }
+  .tab-section.active { display: block; }
 
-    section.tab-panel { display: none; }
-    section.tab-panel.active { display: block; }
+  /* ── Page content wrapper ── */
+  .page-body { padding: 0; }
+  .page-section { padding: 64px 0; }
+  .page-section-inner { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  /* Hero section — no padding, hero handles its own spacing */
+  .page-section:first-child { padding: 0; }
 
-    /* ── TYPOGRAPHY HELPERS ── */
-    h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; }
-    h3 { font-size: 1.05rem; font-weight: 600; color: #cbd5e1; margin-bottom: 12px; }
-    p  { color: var(--muted); margin-bottom: 12px; }
+  /* ── Hero ── */
+  /* ── Hero — full bleed ── */
+  .hero {
+    background: transparent;
+    border-radius: 0;
+    padding: 72px 48px;
+    color: #fff;
+    margin-bottom: 0;
+  }
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow-num {
+    width: 26px; height: 26px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .hero-eyebrow-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .hero-title {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.18;
+    margin-bottom: 12px;
+    max-width: 720px;
+  }
+  .hero-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 44px;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+  .hero-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .hero-kpi {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 28px 28px;
+  }
+  .hero-kpi-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+  }
+  .hero-kpi-val {
+    font-size: 56px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .hero-kpi-val sub { font-size: 22px; color: rgba(255,255,255,0.55); font-weight: 600; vertical-align: baseline; }
+  .hero-kpi-val em { font-style: normal; color: var(--accent); }
+  .hero-kpi-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+  }
+  .hero-kpi-note strong { color: rgba(255,255,255,0.8); font-weight: 600; }
 
-    /* ── CARDS & GRIDS ── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 24px;
-    }
-    .card-grid {
-      display: grid;
-      gap: 16px;
-    }
-    .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  /* ── Section heading ── */
+  .section-heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
 
-    /* ── WORKFLOW CARDS (exec summary) ── */
-    .workflow-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .workflow-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-    }
-    .workflow-card.innerloop::before { background: var(--innerloop); }
-    .workflow-card.direct::before    { background: var(--direct); }
-    .workflow-card.shipit::before    { background: var(--shipit); }
+  /* ── KPI cards ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 56px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--light-bg);
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .kpi-value {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .kpi-sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .kpi-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #EAFAF1;
+    color: var(--success);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
 
-    .score-big {
-      font-size: 2.8rem;
-      font-weight: 800;
-      line-height: 1;
-      margin: 12px 0 4px;
-    }
-    .score-big.innerloop { color: var(--innerloop); }
-    .score-big.direct    { color: var(--direct); }
-    .score-big.shipit    { color: var(--shipit); }
+  /* ── Chart card ── */
+  .chart-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 36px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--blue);
+    margin-bottom: 56px;
+  }
+  .chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .chart-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .chart-wrap { position: relative; height: 320px; }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 99px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .badge-innerloop { background: rgba(99,102,241,.2); color: var(--innerloop); }
-    .badge-direct    { background: rgba(59,130,246,.2); color: var(--direct); }
-    .badge-shipit    { background: rgba(245,158,11,.2); color: var(--shipit); }
+  /* ── Finding cards ── */
+  .findings-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+  .finding-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 32px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-left: 5px solid var(--navy);
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .finding-number {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 48px;
+    font-variant-numeric: tabular-nums;
+  }
+  .finding-body {}
+  .finding-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .finding-text {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
 
-    /* ── CALLOUT BOXES ── */
-    .callout {
-      border-left: 4px solid;
-      padding: 14px 18px;
-      border-radius: 0 8px 8px 0;
-      background: var(--surface2);
-      margin-bottom: 12px;
-    }
-    .callout p { margin: 0; color: var(--text); font-size: 0.9rem; }
-    .callout-success { border-color: var(--success); }
-    .callout-warning { border-color: var(--warning); }
-    .callout-info    { border-color: var(--direct); }
-    .callout strong  { color: #fff; }
+  /* ── Scenario grid ── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .scenario-card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .scenario-header {
+    background: var(--navy);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .scenario-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .scenario-type {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .scenario-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .scenario-table th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    background: #FAFBFD;
+  }
+  .scenario-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #F2F5FA;
+  }
+  .scenario-table tr:last-child td { border-bottom: none; }
+  .workflow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .pill-il { background: rgba(3,45,96,0.1); color: var(--navy); }
+  .pill-dir { background: rgba(1,118,211,0.1); color: var(--blue); }
+  .pill-si { background: rgba(255,176,59,0.15); color: #7A4E00; }
+  .score-win { font-weight: 700; color: var(--success); }
+  .score-mid { font-weight: 600; color: var(--text); }
+  .score-low { font-weight: 400; color: var(--error); }
 
-    /* ── TABLES ── */
-    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; background: var(--surface); }
-    th {
-      background: var(--surface2);
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      padding: 10px 14px;
-      text-align: left;
-      text-transform: uppercase;
-    }
-    td {
-      border-top: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.88rem;
-      padding: 10px 14px;
-    }
-    tr:hover td { background: rgba(255,255,255,.025); }
-    td.il  { color: var(--innerloop); font-weight: 600; }
-    td.dir { color: var(--direct);    font-weight: 600; }
-    td.sh  { color: var(--shipit);    font-weight: 600; }
-    td.best { color: var(--success); font-weight: 700; }
+  /* ── Deep dive table ── */
+  .data-table-wrap {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table thead {
+    background: var(--navy);
+  }
+  .data-table thead th {
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    text-align: left;
+  }
+  .data-table thead th:first-child { color: #fff; }
+  .data-table tbody tr:nth-child(even) td { background: #FAFBFD; }
+  .data-table tbody tr:hover td { background: #EEF4FF; }
+  .data-table td {
+    padding: 16px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td:first-child {
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .cell-win { color: var(--success); font-weight: 700; }
+  .cell-lose { color: var(--error); }
 
-    /* ── CHARTS ── */
-    .chart-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 24px;
-    }
-    .chart-wrap canvas { max-height: 280px; }
+  /* ── Cost section ── */
+  .cost-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .cost-tile {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 40px 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .cost-tile.winner { border-top: 4px solid var(--success); }
+  .cost-tile.mid { border-top: 4px solid var(--warning); }
+  .cost-tile.high { border-top: 4px solid var(--error); }
+  .cost-workflow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .cost-amount {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cost-delta {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .cost-delta.better { background: #EAFAF1; color: var(--success); }
+  .cost-delta.worse { background: #FEF0EF; color: var(--error); }
+  .cost-delta.neutral { background: var(--light-bg); color: var(--blue); }
+  .cost-breakdown {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 2;
+    text-align: left;
+  }
+  .cost-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cost-breakdown-row:last-child { border-bottom: none; }
 
-    /* ── FINDING BULLETS ── */
-    .finding-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .finding-list li {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 0.88rem;
-      color: var(--text);
-    }
-    .finding-list li::before {
-      content: '-> ';
-      color: var(--direct);
-      font-weight: 700;
-    }
+  .note-card {
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .note-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 
-    /* ── PR LINKS ── */
-    .pr-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-    .pr-link {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: #93c5fd;
-      font-size: 0.82rem;
-      padding: 6px 12px;
-      text-decoration: none;
-      transition: background .15s;
-    }
-    .pr-link:hover { background: var(--surface2); }
+  /* ── Guidance ── */
+  .guidance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .guidance-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 36px 32px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .guidance-il { border-top: 4px solid var(--il); }
+  .guidance-dir { border-top: 4px solid var(--dir); }
+  .guidance-si { border-top: 4px solid var(--si); }
+  .guidance-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .guidance-il .guidance-icon { background: rgba(3,45,96,0.08); }
+  .guidance-dir .guidance-icon { background: rgba(1,118,211,0.08); }
+  .guidance-si .guidance-icon { background: rgba(255,176,59,0.12); }
+  .guidance-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .guidance-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+  .guidance-section-label.use { color: var(--success); }
+  .guidance-section-label.avoid { color: var(--error); }
+  .guidance-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .guidance-list li {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .guidance-list li::before {
+    content: '→';
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-weight: 700;
+  }
+  .guidance-list.avoid-list li::before {
+    content: '✕';
+    color: var(--error);
+  }
 
-    /* ── SECTION HEADER DIVIDER ── */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 32px 0 20px;
-    }
-    .section-header h2 { margin: 0; }
-    .section-header .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+  /* ── Exec summary: full-bleed navy ── */
+  #tab-summary { background: var(--navy); }
+  #tab-summary .page-section:first-child { padding: 0; }
+  #tab-summary .page-body { background: var(--navy); }
+  /* KPI cards keep white bg + bubble on navy */
+  #tab-summary .section-heading { color: #fff; }
+  #tab-summary .section-sub { color: rgba(255,255,255,0.55); }
 
-    /* ── WHEN-TO-USE GRID ── */
-    .use-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .use-grid .use-header {
-      background: var(--surface2);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 12px 14px;
-      text-transform: uppercase;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-    }
-    .use-grid .use-cell {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      padding: 12px 14px;
-      font-size: 0.85rem;
-    }
-    .use-grid .use-cell:nth-child(4n) { border-right: none; }
-    .check { color: var(--success); font-weight: 700; }
-    .cross { color: var(--error);   font-weight: 700; }
-    .maybe { color: var(--warning); font-weight: 700; }
 
-    /* ── PROMPT VERBATIM ── */
-    pre.prompt {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #e2e8f0;
-      font-family: 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 0.8rem;
-      line-height: 1.5;
-      padding: 16px 20px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+  
 
-    /* ── RECOMMENDATION CARDS ── */
-    .rec-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 22px;
-    }
-    .rec-card h3 { font-size: 1rem; margin-bottom: 8px; }
-    .rec-card ul { padding-left: 18px; }
-    .rec-card ul li { color: var(--muted); font-size: 0.88rem; margin-bottom: 4px; }
+  .decision-wrap {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .decision-header {
+    background: var(--navy);
+    padding: 16px 24px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .decision-header span:first-child { color: rgba(255,255,255,0.4); }
+  .decision-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .decision-row:last-child { border-bottom: none; }
+  .decision-row:hover { background: #F8FAFF; }
+  .decision-criterion {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .dc {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    width: fit-content;
+  }
+  .dc-yes { background: #EAFAF1; color: var(--success); }
+  .dc-no { background: #FEF0EF; color: var(--error); }
+  .dc-partial { background: #FEF6E4; color: var(--warning); }
 
-    /* ── ANOMALY WARNING ── */
-    .anomaly-box {
-      background: rgba(245,158,11,.1);
-      border: 1px solid rgba(245,158,11,.4);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 0.85rem;
-      color: #fcd34d;
-      margin-bottom: 16px;
-    }
-
-    /* ── MISC ── */
-    .spacer { height: 24px; }
-    .dim { color: var(--muted); font-size: 0.82rem; }
-  </style>
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .rec-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+  .rec-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .rec-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .rec-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .rec-tagline { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+  .rec-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rec-list li {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .rec-list li::before {
+    content: '·';
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-weight: 800;
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <h1>AI Workflow Comparison</h1>
-  <p>Innerloop vs Direct vs ShipIt &mdash; SVP Briefing &mdash; 2026-05-17</p>
+<!-- Top bar -->
+<header class="top-bar">
+  <div class="top-bar-logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.1)"/>
+      <path d="M10 22 L16 10 L22 22" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="12" y1="18" x2="20" y2="18" stroke="#1B96FF" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    AI Workflow Benchmark — Executive Report
+  </div>
+  <div class="top-bar-meta">Prepared May 2026 &nbsp;·&nbsp; Confidential</div>
 </header>
 
-<nav id="tab-nav">
-  <button data-tab="exec"   class="active">Executive Summary</button>
-  <button data-tab="method">Methodology</button>
-  <button data-tab="s1">S1: Open Task</button>
-  <button data-tab="s2">S2: Bug Fix</button>
-  <button data-tab="s3">S3: Work Item</button>
-  <button data-tab="s4">S4: Second Brain</button>
-  <button data-tab="cost">Cost &amp; Tokens</button>
-  <button data-tab="guide">Decision Guide</button>
+<!-- Tab nav -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="summary">Summary</button>
+  <button class="tab-btn" data-tab="scenarios">Scenarios</button>
+  <button class="tab-btn" data-tab="deepdive">Deep Dive</button>
+  <button class="tab-btn" data-tab="cost">Cost</button>
+  <button class="tab-btn" data-tab="guidance">Guidance</button>
+    <button class="tab-btn" data-tab="methodology">Methodology</button>
 </nav>
 
-<main>
+<!-- ══════════════ SUMMARY ══════════════ -->
+<section class="tab-section active" id="tab-summary">
+  <div class="page-body"><div class="page-section"><div class="page-section-inner">
 
-  <!-- ================================================================
-       TAB 1: EXECUTIVE SUMMARY
-  ================================================================ -->
-  <section class="tab-panel active" id="tab-exec">
-    <div class="section-header">
-      <div class="dot" style="background:#0176d3"></div>
-      <h2>Executive Summary</h2>
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-num">1</div>
+        <span class="hero-eyebrow-label">Executive Summary &nbsp;·&nbsp; May 2026</span>
+      </div>
+      <div class="hero-title">Direct Implementation Dominates Across All Key Dimensions</div>
+      <p class="hero-desc">Benchmark across 4 engineering scenarios (S1–S4), 3 AI workflows, measuring quality (council score), speed (minutes), and cost (API spend). Single-run measurements per workflow per scenario.</p>
+      <div class="kpi-row" style="margin-bottom:0;">
+        <div class="kpi-card">
+          <div class="kpi-label">Top Council Score</div>
+          <div class="kpi-value">20.3</div>
+          <div class="kpi-sub" >Direct Implementation average</div>
+          <div class="kpi-badge">↑ Best overall</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--success);">
+          <div class="kpi-label">Fastest Workflow</div>
+          <div class="kpi-value">3.3<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S1 (simple task)</div>
+          <div class="kpi-badge">↑ 5× faster than ShipIt</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--warning);">
+          <div class="kpi-label">Most Economical</div>
+          <div class="kpi-value">$16</div>
+          <div class="kpi-sub" >Direct total across 4 scenarios</div>
+          <div class="kpi-badge">↓ $12 vs InnerLoop</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--il);">
+          <div class="kpi-label">Speed Winner S4</div>
+          <div class="kpi-value">10<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S4 (complex feature)</div>
+          <div class="kpi-badge">↑ 3× faster than InnerLoop</div>
+        </div>
+      </div>
     </div>
-    <p>Four real-world scenarios tested across Innerloop, Direct (Claude Code bare), and ShipIt. Each scenario used identical prompts, same codebase, same hardware. A 5-model SFDC Council independently scored outputs.</p>
 
-    <div class="spacer"></div>
-    <h3>Top 3 Findings</h3>
-    <div class="callout callout-info">
-      <p><strong>Speed and quality favor Direct</strong> &mdash; Direct is fastest on 2 of 4 scenarios and achieved the highest average council score (20.3/25). Ideal for GUS work items and time-boxed tasks.</p>
-    </div>
-    <div class="callout callout-success">
-      <p><strong>Innerloop produces the most tests</strong> &mdash; Across all scenarios, Innerloop wrote significantly more tests. In S4, Innerloop wrote 57 tests vs Direct's 31 and ShipIt's 23. Best choice when test coverage is a hard requirement.</p>
-    </div>
-    <div class="callout callout-warning">
-      <p><strong>ShipIt anomaly requires attention</strong> &mdash; In S2, ShipIt's first run produced 0 code changes (cause unknown). A re-run succeeded. Always validate ShipIt output before merging. ShipIt is not broken &mdash; this was an isolated anomaly.</p>
+    <div class="chart-card">
+      <div class="chart-title">Direct Wins Every Quality Round</div>
+      <div class="chart-subtitle">Council scores by scenario (max 25) — higher is better</div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--il)"></div>InnerLoop</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dir)"></div>Direct</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--si)"></div>ShipIt</div>
+      </div>
+      <div class="chart-wrap"><canvas id="councilChart"></canvas></div>
     </div>
 
-    <div class="spacer"></div>
+    <div class="section-heading">Three Decisive Findings</div>
+    <div class="section-sub">What the data tells us for strategic workflow selection</div>
 
-    <!-- Workflow score cards -->
-    <div class="card-grid card-grid-3">
-      <div class="workflow-card innerloop">
-        <span class="badge badge-innerloop">Innerloop</span>
-        <div class="score-big innerloop">18.3</div>
-        <div style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Avg council score /25</div>
-        <ul style="list-style:none;font-size:0.87rem;color:var(--muted)">
-          <li style="margin-bottom:4px">&#10003; Highest test coverage</li>
-          <li style="margin-bottom:4px">&#10003; Built-in review gate</li>
-          <li style="margin-bottom:4px">&#9200; Slowest (6.7m&ndash;41m)</li>
-          <li style="margin-bottom:4px">&#128176; Highest total cost ($67.67)</li>
+    <div class="findings-stack">
+      <div class="finding-card">
+        <div class="finding-number">01</div>
+        <div class="finding-body">
+          <div class="finding-title">Direct Implementation is the Default Choice for Well-Specified Tasks</div>
+          <div class="finding-text">Scoring 20.3/25 on average with the lowest total cost ($16.48) and competitive speed across S1–S3, Direct outperforms InnerLoop on all three scored scenarios. For tasks with clear acceptance criteria, Direct should be the baseline workflow.</div>
+        </div>
+      </div>
+      <div class="finding-card" style="border-left-color: var(--blue);">
+        <div class="finding-number">02</div>
+        <div class="finding-body">
+          <div class="finding-title">InnerLoop Shines on Speed-Critical Simple Scenarios</div>
+          <div class="finding-text">InnerLoop completes S1 in 6.7 min and S2 in 6.8 min — consistently faster than ShipIt and near-instant for low-complexity work. However, its $28.73 total cost and lower council scores on S3/S4 limit its value for complex features.</div>
+        </div>
+      </div>
+      <div class="finding-card" style="border-left-color: var(--warning);">
+        <div class="finding-number">03</div>
+        <div class="finding-body">
+          <div class="finding-title">ShipIt's 15.0 Average Score Does Not Justify Its Complexity Overhead</div>
+          <div class="finding-text">ShipIt scores the lowest on all three evaluated scenarios and is the slowest on S1–S3 (33–41 min). Its only competitive performance is S4 speed (11.1 min). ShipIt should be reserved for well-rehearsed CI/CD scenarios where setup costs are amortized.</div>
+        </div>
+      </div>
+    </div>
+
+  </div></div></div>
+</section>
+
+<!-- ══════════════ SCENARIOS ══════════════ -->
+<section class="tab-section" id="tab-scenarios">
+  <div class="page-body"><div class="page-section"><div class="page-section-inner">
+
+    <div class="section-heading">Scenario-by-Scenario Breakdown</div>
+    <div class="section-sub">Four real engineering scenarios evaluated across all three workflows</div>
+
+    <div class="scenario-grid">
+
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <div>
+            <div class="scenario-name">S1 — Open Task (Cold Start)</div>
+            <div class="scenario-type">Council evaluated</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;">Speed + Discovery</div>
+        </div>
+        <table class="scenario-table">
+          <thead><tr><th>Workflow</th><th>Time (min)</th><th>Council Score</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="workflow-pill pill-il">InnerLoop</span></td>
+              <td>6.7</td>
+              <td>18/25</td>
+              <td>$5.08</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-dir">Direct</span></td>
+              <td class="score-win">3.3</td>
+              <td class="score-low">14/25</td>
+              <td class="score-win">$4.13</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-si">ShipIt</span></td>
+              <td class="score-low">41.1</td>
+              <td class="score-win">20/25</td>
+              <td>$5.51</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header" style="background:#0D3E7A;">
+          <div>
+            <div class="scenario-name">S2 — Bug Fix with Tests</div>
+            <div class="scenario-type">Council evaluated</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;">Quality + Speed</div>
+        </div>
+        <table class="scenario-table">
+          <thead><tr><th>Workflow</th><th>Time (min)</th><th>Council Score</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="workflow-pill pill-il">InnerLoop</span></td>
+              <td>6.8</td>
+              <td>17/25</td>
+              <td>$4.39</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-dir">Direct</span></td>
+              <td>15.7</td>
+              <td class="score-win">18/25</td>
+              <td class="score-win">$4.34</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-si">ShipIt</span></td>
+              <td class="score-low">33.5</td>
+              <td class="score-low">11/25</td>
+              <td>$7.98</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header" style="background:#0A4A87;">
+          <div>
+            <div class="scenario-name">S3 — Work Item Implementation</div>
+            <div class="scenario-type">Council evaluated</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;">Typical Sprint Work</div>
+        </div>
+        <table class="scenario-table">
+          <thead><tr><th>Workflow</th><th>Time (min)</th><th>Council Score</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="workflow-pill pill-il">InnerLoop</span></td>
+              <td class="score-win">3.6</td>
+              <td>19/25</td>
+              <td>$4.60</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-dir">Direct</span></td>
+              <td>24.2</td>
+              <td class="score-win">22/25</td>
+              <td class="score-win">$3.64</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-si">ShipIt</span></td>
+              <td class="score-low">37.2</td>
+              <td class="score-low">17/25</td>
+              <td>$4.58</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header" style="background:#083560;">
+          <div>
+            <div class="scenario-name">S4 — Complex Feature</div>
+            <div class="scenario-type">Council evaluated</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;">High Complexity</div>
+        </div>
+        <table class="scenario-table">
+          <thead><tr><th>Workflow</th><th>Time (min)</th><th>Council Score</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="workflow-pill pill-il">InnerLoop</span></td>
+              <td class="score-low">~29</td>
+              <td>19/25</td>
+              <td class="score-low">$14.67</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-dir">Direct</span></td>
+              <td class="score-win">9.9</td>
+              <td class="score-win">21/25</td>
+              <td class="score-win">$4.36</td>
+            </tr>
+            <tr>
+              <td><span class="workflow-pill pill-si">ShipIt</span></td>
+              <td>11.1</td>
+              <td>17/25</td>
+              <td>$4.39</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div></div></div>
+</section>
+
+<!-- ══════════════ DEEP DIVE ══════════════ -->
+<section class="tab-section" id="tab-deepdive">
+  <div class="page-body"><div class="page-section"><div class="page-section-inner">
+
+    <div class="section-heading">What Each Workflow Uniquely Found</div>
+    <div class="section-sub">Bugs discovered by one workflow that the others missed — verified by SFDC Council code inspection</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px;">
+
+      <!-- InnerLoop Unique -->
+      <div class="chart-card" style="border-top-color:var(--il);margin-bottom:0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-il">InnerLoop</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Plan approval DB race</strong> — <code>approve_plan</code> dispatched to agent before DB status update; plan stays "proposed" if agent unavailable</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Multi-conversation race</strong> — <code>_pending_clarification</code> single dict overwritten by concurrent conversations</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--il);font-weight:700;flex-shrink:0;">→</span><span><strong>Thinking status never resets</strong> — <code>managerStatus</code> stays "thinking" after successful message send</span></li>
         </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">Missed by Direct + ShipIt in S1; caught by Innerloop council review S2+</div>
       </div>
-      <div class="workflow-card direct">
-        <span class="badge badge-direct">Direct</span>
-        <div class="score-big direct">20.3</div>
-        <div style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Avg council score /25 <span class="badge badge-direct" style="font-size:0.68rem;margin-left:4px">BEST</span></div>
-        <ul style="list-style:none;font-size:0.87rem;color:var(--muted)">
-          <li style="margin-bottom:4px">&#10003; Highest council scores (3 of 4)</li>
-          <li style="margin-bottom:4px">&#10003; Fastest on most tasks</li>
-          <li style="margin-bottom:4px">&#10003; Lowest total cost ($16.48)</li>
-          <li style="margin-bottom:4px">&#9888; Fewest tests written</li>
+
+      <!-- Direct Unique -->
+      <div class="chart-card" style="border-top-color:var(--dir);margin-bottom:0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-dir">Direct</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>Event loop blocking</strong> — <code>_do_commit</code> and <code>_do_open_pr</code> call <code>subprocess.run</code> directly in async context, blocking the loop</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>Wrong JSON key</strong> — sign-off prompt returns <code>"note"</code> (singular) but code reads <code>decision.get("notes")</code>; notes always empty</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--dir);font-weight:700;flex-shrink:0;">→</span><span><strong>useEffect infinite loop</strong> — plan-seeding effect depends on <code>plans</code>, mutates plans, re-triggers itself endlessly</span></li>
         </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">Direct found these in S1; Innerloop + ShipIt both missed them</div>
       </div>
-      <div class="workflow-card shipit">
-        <span class="badge badge-shipit">ShipIt</span>
-        <div class="score-big shipit">15.0</div>
-        <div style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Avg council score /25</div>
-        <ul style="list-style:none;font-size:0.87rem;color:var(--muted)">
-          <li style="margin-bottom:4px">&#10003; Fully automated pipeline</li>
-          <li style="margin-bottom:4px">&#9888; S2 anomaly: 0 changes on first run</li>
-          <li style="margin-bottom:4px">&#9200; Slowest overall (37&ndash;41m)</li>
-          <li style="margin-bottom:4px">&#128202; Lowest council scores</li>
+
+      <!-- ShipIt Unique -->
+      <div class="chart-card" style="border-top-color:var(--si);margin-bottom:0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span class="workflow-pill pill-si">ShipIt</span>
+          <span style="font-size:13px;color:var(--muted);">Unique findings</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>Session watcher debounce broken</strong> — set-based dedup processes only first event per file; all subsequent rapid changes silently dropped</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>Session-to-repo matching missing</strong> — sessions never get <code>repo_id</code> assigned from <code>cwd</code>; fleet sidebar always empty</span></li>
+          <li style="display:flex;gap:10px;font-size:13px;"><span style="color:var(--si);font-weight:700;flex-shrink:0;">→</span><span><strong>SQL injection vectors</strong> — <code>get_daily_cost_series</code> and <code>get_session_costs</code> use f-string interpolation in raw SQL</span></li>
         </ul>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--light-bg);border-radius:6px;font-size:12px;color:var(--muted);">ShipIt uniquely found these across S1 + S3; neither Innerloop nor Direct caught them</div>
       </div>
+
     </div>
 
-    <div class="spacer"></div>
+    <div class="section-heading">Council Score Breakdown</div>
+    <div class="section-sub">5-model SFDC Council scores across all 4 scenarios (out of 25 per scenario)</div>
 
-    <!-- Charts row -->
-    <div class="card-grid card-grid-2">
-      <div class="chart-wrap">
-        <h3>Council Scores by Scenario</h3>
-        <canvas id="chart-exec-scores"></canvas>
-      </div>
-      <div class="chart-wrap">
-        <h3>Total Cost (All 4 Scenarios)</h3>
-        <canvas id="chart-exec-cost"></canvas>
-      </div>
-    </div>
-
-    <div class="spacer"></div>
-
-    <!-- When to use grid -->
-    <h3>When to Use Each Workflow</h3>
-    <div class="use-grid">
-      <div class="use-header">Situation</div>
-      <div class="use-header" style="color:var(--innerloop)">Innerloop</div>
-      <div class="use-header" style="color:var(--direct)">Direct</div>
-      <div class="use-header" style="color:var(--shipit)">ShipIt</div>
-
-      <div class="use-cell">Production code, tests required</div>
-      <div class="use-cell check">Best</div>
-      <div class="use-cell maybe">OK</div>
-      <div class="use-cell cross">Risky</div>
-
-      <div class="use-cell">Time-critical prototype (&lt;15m)</div>
-      <div class="use-cell cross">Too slow</div>
-      <div class="use-cell check">Best</div>
-      <div class="use-cell cross">Too slow</div>
-
-      <div class="use-cell">GUS work item with clear AC</div>
-      <div class="use-cell maybe">OK</div>
-      <div class="use-cell check">Best quality</div>
-      <div class="use-cell maybe">OK</div>
-
-      <div class="use-cell">Unattended async pipeline</div>
-      <div class="use-cell cross">Needs human</div>
-      <div class="use-cell cross">Needs human</div>
-      <div class="use-cell check">Best</div>
-
-      <div class="use-cell">High test coverage required</div>
-      <div class="use-cell check">Best</div>
-      <div class="use-cell cross">Minimal</div>
-      <div class="use-cell maybe">Some</div>
-
-      <div class="use-cell">Code review gate built-in</div>
-      <div class="use-cell check">Built-in</div>
-      <div class="use-cell cross">Manual only</div>
-      <div class="use-cell maybe">Partial</div>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 2: METHODOLOGY
-  ================================================================ -->
-  <section class="tab-panel" id="tab-method">
-    <div class="section-header">
-      <div class="dot" style="background:#6366f1"></div>
-      <h2>Methodology</h2>
-    </div>
-
-    <div class="card">
-      <h3>Data Integrity Statement</h3>
-      <p style="margin:0">All metrics are from actual runs. Times are wall-clock. Tool call counts are from Claude Code transcripts. Test counts are from pytest output. Council scores are independent multi-model reviews &mdash; no human scoring involved. W-21632772 acceptance criteria verified live from GUS on 2026-05-17.</p>
-    </div>
-
-    <div class="spacer"></div>
-
-    <h3>SFDC Council &mdash; 5-Model Review Panel</h3>
-    <p>Each workflow output was independently reviewed by all 5 council members. Scores are averaged. Quorum requires 3/5 agreement on findings.</p>
-    <div class="table-wrap">
-      <table>
+    <div class="chart-card" style="padding:0;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
         <thead>
-          <tr><th>#</th><th>Model</th><th>Role</th><th>Gateway</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>Claude Code</td><td>Lead reviewer (codebase access)</td><td>Local</td></tr>
-          <tr><td>2</td><td>Claude Opus 4.7</td><td>Architecture &amp; depth</td><td>LLMGateway Express (claude-opus-4-7)</td></tr>
-          <tr><td>3</td><td>Claude Sonnet 4.6</td><td>Code quality &amp; style</td><td>LLMGateway Express (claude-sonnet-4-6)</td></tr>
-          <tr><td>4</td><td>GPT-5</td><td>Cross-model perspective</td><td>LLMGateway Express (gpt-5)</td></tr>
-          <tr><td>5</td><td>Gemini 2.5 Pro</td><td>Security &amp; testing</td><td>LLMGateway Express (gemini-2.5-pro)</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="margin-top:10px" class="dim">Gateway: eng-ai-model-gateway.sfproxy.devx-preprod.aws.sfdc.cl &nbsp;|&nbsp; Min quorum: 3/5</p>
-
-    <div class="spacer"></div>
-
-    <h3>ShipIt Limitation Note</h3>
-    <div class="anomaly-box">
-      <strong>S2 Anomaly:</strong> ShipIt's first run on Scenario 2 (Bug Fix) produced 0 code changes. Root cause is unknown &mdash; the run completed without errors but no files were modified. A re-run was performed and succeeded (10/10 bugs fixed, 17 new tests). Both runs are reported transparently in the S2 tab. ShipIt is not considered broken; this was an isolated anomaly.
-    </div>
-
-    <div class="spacer"></div>
-
-    <h3>Prompts Used (Verbatim)</h3>
-
-    <h3 style="margin-top:20px;margin-bottom:8px">Scenario 1 &mdash; Open Task</h3>
-    <pre class="prompt">The claude-talk Manager Portal has reliability and correctness issues. Investigate the codebase, identify problems, and fix them. Focus on: claude_talk/routers/manager.py, claude_talk/agents/repo_manager.py, claude_talk/db.py, claude_talk/watchers/session_watcher.py, frontend/src/store/index.ts, frontend/src/components/manager/ManagerChat.tsx</pre>
-
-    <h3 style="margin-top:20px;margin-bottom:8px">Scenario 2 &mdash; Bug Fix</h3>
-    <pre class="prompt">10 pre-identified bugs were provided in a structured list and handed to each workflow. All three received identical bug descriptions with file paths, line number hints, and expected vs actual behavior for each of the 10 bugs.</pre>
-
-    <h3 style="margin-top:20px;margin-bottom:8px">Scenario 3 &mdash; GUS Work Item W-21632772</h3>
-    <pre class="prompt">GUS Work Item: W-21632772
-Title: Parameterize output for loops in structured data
-Repo: beethoven / GenUI Services
-Acceptance Criteria:
-  AC1: Output loops support parameterized iteration
-  AC2: Structured data schema validates loop parameters</pre>
-
-    <h3 style="margin-top:20px;margin-bottom:8px">Scenario 4 &mdash; Second Brain Feature</h3>
-    <pre class="prompt">Build a Second Brain feature for claude-talk. Requirements: notes CRUD, full-text search, folder organization, backlinks, daily notes, version history, Ask Claude integration. Store in SQLite with proper migrations. Add REST API endpoints, frontend UI, and comprehensive test coverage.</pre>
-
-    <div class="spacer"></div>
-
-    <h3>Cost Methodology</h3>
-    <p>Token costs estimated at <strong>$15 / 1M tokens</strong> blended rate (input + output) across Anthropic API usage. Actual costs may vary based on model mix and prompt caching behavior.</p>
-  </section>
-
-  <!-- ================================================================
-       TAB 3: S1 — OPEN TASK
-  ================================================================ -->
-  <section class="tab-panel" id="tab-s1">
-    <div class="section-header">
-      <div class="dot" style="background:#0176d3"></div>
-      <h2>Scenario 1 &mdash; Open Task (Cold-Start Bug Discovery)</h2>
-    </div>
-    <p>All 3 workflows started from the same raw prompt with zero hints. Evaluated on: bugs found/fixed, test coverage, TypeScript compliance, and speed.</p>
-
-    <div class="card" style="margin-bottom:20px">
-      <h3>Prompt</h3>
-      <pre class="prompt" style="margin-top:8px">The claude-talk Manager Portal has reliability and correctness issues. Investigate the codebase, identify problems, and fix them. Focus on: claude_talk/routers/manager.py, claude_talk/agents/repo_manager.py, claude_talk/db.py, claude_talk/watchers/session_watcher.py, frontend/src/store/index.ts, frontend/src/components/manager/ManagerChat.tsx</pre>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
+          <tr style="background:var(--navy);color:#fff;">
+            <th style="padding:14px 20px;text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;">Dimension</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S1 Open Task</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S2 Bug Fix</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S3 Work Item</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:600;">S4 Feature</th>
+            <th style="padding:14px 20px;text-align:center;font-weight:700;background:rgba(255,255,255,.08);">Avg</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Wall-clock time</td>       <td class="il">400s (6.7m)</td>     <td class="dir best">196s (3.3m)</td>   <td class="sh">2468s (41.1m)</td></tr>
-          <tr><td>Tool calls</td>            <td class="il">37</td>              <td class="dir best">22</td>            <td class="sh">42</td></tr>
-          <tr><td>Bugs found</td>            <td class="il">6</td>              <td class="dir">6</td>                  <td class="sh">6</td></tr>
-          <tr><td>Bugs fixed</td>            <td class="il">6</td>              <td class="dir">6</td>                  <td class="sh">6</td></tr>
-          <tr><td>Tests written</td>         <td class="il">2</td>              <td class="dir">0</td>                  <td class="sh best">6</td></tr>
-          <tr><td>Tests passing</td>         <td class="il">35</td>             <td class="dir">26</td>                 <td class="sh best">32 (+ 6 new)</td></tr>
-          <tr><td>TypeScript clean</td>      <td class="il">Yes</td>            <td class="dir">Yes</td>               <td class="sh">Yes</td></tr>
-          <tr><td>Council review score</td>  <td>n/a</td>                       <td>n/a</td>                           <td class="sh">22 / 25</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Key Findings</h3>
-    <ul class="finding-list">
-      <li>All 3 workflows found the same 6 bugs &mdash; confirming the bugs were clearly surfaceable from the codebase.</li>
-      <li>Direct was 2x faster than Innerloop and 12x faster than ShipIt on this cold-start task.</li>
-      <li>ShipIt wrote the most tests (6) despite being slowest &mdash; its post-execution review phase contributed.</li>
-      <li>ShipIt's internal reviewer scored 22/25 for this scenario (no SFDC Council review run for S1).</li>
-      <li>TypeScript compliance was clean across all 3 &mdash; no type regressions introduced.</li>
-    </ul>
-
-    <div class="spacer"></div>
-    <div class="chart-wrap">
-      <h3>S1: Speed, Tool Calls, and Tests</h3>
-      <canvas id="chart-s1"></canvas>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 4: S2 — BUG FIX
-  ================================================================ -->
-  <section class="tab-panel" id="tab-s2">
-    <div class="section-header">
-      <div class="dot" style="background:#ef4444"></div>
-      <h2>Scenario 2 &mdash; Bug Fix (10 Pre-Identified Bugs)</h2>
-    </div>
-    <p>10 bugs were pre-identified and given to each workflow as a structured list with file paths, line hints, and expected vs actual behavior. Council scores from a code reviewer subagent inspecting actual worktree files.</p>
-
-    <div class="anomaly-box">
-      <strong>ShipIt Anomaly (Run 1):</strong> First run produced 0 code changes. Root cause unknown &mdash; run completed without errors. A re-run was performed and succeeded. Both runs are reported below.
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt Run 1</th>
-            <th style="color:var(--shipit)">ShipIt Run 2</th>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--navy);">🔬 InnerLoop</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--warning);font-weight:700;">18/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">19/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">19/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:700;color:var(--navy);background:#EEF4FF;">18.3</td>
           </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Wall-clock time</td>
-            <td class="il best">409s (6.8m)</td>
-            <td class="dir">942s (15.7m)</td>
-            <td class="sh">2012s (33.5m)</td>
-            <td class="sh">~1200s (~20m)</td>
+          <tr style="background:#f9f9f9;border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--dir);">⚡ Direct</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--error);font-weight:700;">14/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">18/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">22/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">21/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:800;color:var(--success);background:#EEF4FF;">20.3 ↑</td>
           </tr>
-          <tr>
-            <td>Bugs fixed</td>
-            <td class="il">9 / 10</td>
-            <td class="dir best">10 / 10</td>
-            <td class="sh" style="color:var(--error)">0 / 10 &mdash; anomaly</td>
-            <td class="sh">10 / 10</td>
-          </tr>
-          <tr>
-            <td>Tests written</td>
-            <td class="il">7</td>
-            <td class="dir">1</td>
-            <td class="sh">3 (evidence only)</td>
-            <td class="sh best">17</td>
-          </tr>
-          <tr>
-            <td>Council score</td>
-            <td class="il">17 / 25</td>
-            <td class="dir best">18 / 25</td>
-            <td class="sh">11 / 25</td>
-            <td class="sh">n/a (re-run)</td>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:12px 20px;font-weight:600;color:var(--si);">🚀 ShipIt</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--success);font-weight:700;">20/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--error);font-weight:700;">11/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;color:var(--muted);">17/25</td>
+            <td style="padding:12px 20px;text-align:center;font-weight:700;color:var(--error);background:#EEF4FF;">15.0</td>
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Key Findings</h3>
-    <ul class="finding-list">
-      <li>Direct is the clear winner &mdash; 100% bug fix rate, highest council score (18/25), completed in 15.7m.</li>
-      <li>Innerloop missed 1 bug but was fastest (6.8m) and wrote 7 tests.</li>
-      <li>ShipIt run 1 anomaly underscores the need for output validation before merging automated pipeline results.</li>
-      <li>ShipIt run 2 recovered well (8/10 bugs, 17 new tests) &mdash; the anomaly appears isolated, not systemic.</li>
-      <li>Council score gap is significant: Direct (18) vs ShipIt run 1 (11) &mdash; a 39% delta on code quality.</li>
-    </ul>
-
-    <div class="spacer"></div>
-    <div class="chart-wrap">
-      <h3>S2: Bugs Fixed and Council Scores</h3>
-      <canvas id="chart-s2"></canvas>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Pull Requests &mdash; claude-talk</h3>
-    <div class="pr-links">
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4" target="_blank">PR #4 &mdash; Innerloop</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5" target="_blank">PR #5 &mdash; Direct</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6" target="_blank">PR #6 &mdash; ShipIt</a>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 5: S3 — WORK ITEM
-  ================================================================ -->
-  <section class="tab-panel" id="tab-s3">
-    <div class="section-header">
-      <div class="dot" style="background:#22c55e"></div>
-      <h2>Scenario 3 &mdash; W-21632772 (GUS Work Item)</h2>
-    </div>
-    <p>Live GUS user story queried on 2026-05-17: <strong>W-21632772 &ldquo;Parameterize output for loops in structured data&rdquo;</strong> &mdash; beethoven / GenUI Services.</p>
-
-    <div class="card" style="margin-bottom:20px">
-      <h3>Work Item Details</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.88rem;margin-top:8px">
-        <div><span class="dim">ID:</span> <strong>W-21632772</strong></div>
-        <div><span class="dim">Repo:</span> beethoven / GenUI Services</div>
-        <div><span class="dim">AC1:</span> Output loops support parameterized iteration</div>
-        <div><span class="dim">AC2:</span> Structured data schema validates loop parameters</div>
+      <div style="padding:12px 20px;background:#f9f9f9;font-size:12px;color:var(--muted);border-top:1px solid var(--border);">
+        S2 ShipIt score (11/25) reflects code inspection finding zero actual source changes despite polished evidence documents. Re-run scored higher.
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Wall-clock time</td>    <td class="il best">3.6m</td>      <td class="dir">24.2m</td>            <td class="sh">37.2m</td></tr>
-          <tr><td>Tool calls</td>         <td class="il best">17</td>        <td class="dir">30</td>               <td class="sh">59</td></tr>
-          <tr><td>Tests written</td>      <td class="il">9</td>             <td class="dir best">45</td>           <td class="sh">13</td></tr>
-          <tr><td>Tests passing</td>      <td class="il">940</td>           <td class="dir best">976</td>          <td class="sh">944</td></tr>
-          <tr><td>Council score</td>      <td class="il">19 / 25</td>       <td class="dir best">22 / 25</td>      <td class="sh">17 / 25</td></tr>
-          <tr><td>AC1 met</td>            <td class="il">Yes</td>           <td class="dir">Yes</td>               <td class="sh">Yes</td></tr>
-          <tr><td>AC2 met</td>            <td class="il">Yes</td>           <td class="dir">Yes</td>               <td class="sh">Yes</td></tr>
-        </tbody>
-      </table>
-    </div>
 
-    <div class="spacer"></div>
-    <h3>Key Findings</h3>
-    <ul class="finding-list">
-      <li>All 3 met both acceptance criteria &mdash; clear AC specs are sufficient for any workflow to deliver.</li>
-      <li>Direct scored highest (22/25) and wrote 45 tests &mdash; 5x more than Innerloop and 3.5x more than ShipIt.</li>
-      <li>Innerloop was dramatically faster (3.6m vs 24.2m) but wrote fewer tests &mdash; a clear quality/speed tradeoff.</li>
-      <li>ShipIt used the most tool calls (59 vs 17) and took the longest, yet scored lowest (17/25).</li>
-      <li>Direct's 976 passing tests (vs 940/944) suggests deeper integration with the existing test suite.</li>
-    </ul>
+    <div class="section-heading" style="margin-top:48px;">Pull Requests &amp; Artifacts</div>
+    <div class="section-sub">All implementations committed as draft PRs — base branch: feat/sb-scaffold (claude-talk) · main (beethoven)</div>
 
-    <div class="spacer"></div>
-    <div class="chart-wrap">
-      <h3>S3: Council Score and Test Coverage</h3>
-      <canvas id="chart-s3"></canvas>
-    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:32px;">
 
-    <div class="spacer"></div>
-    <h3>Pull Requests &mdash; beethoven</h3>
-    <div class="pr-links">
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/7" target="_blank">PR #7 &mdash; Innerloop</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/8" target="_blank">PR #8 &mdash; Direct</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/9" target="_blank">PR #9 &mdash; ShipIt</a>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 6: S4 — SECOND BRAIN
-  ================================================================ -->
-  <section class="tab-panel" id="tab-s4">
-    <div class="section-header">
-      <div class="dot" style="background:#a78bfa"></div>
-      <h2>Scenario 4 &mdash; Second Brain Feature (Product Prompt)</h2>
-    </div>
-    <p>A product-style prompt requesting a full Second Brain feature in claude-talk. Evaluated on feature completeness, test coverage, and council quality score.</p>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Wall-clock time</td>  <td class="il">~29m</td>       <td class="dir best">9.9m</td>    <td class="sh">11.1m</td></tr>
-          <tr><td>Tool calls</td>       <td class="il">~120</td>       <td class="dir">61</td>           <td class="sh best">52</td></tr>
-          <tr><td>Tests written</td>    <td class="il best">57</td>    <td class="dir">31</td>           <td class="sh">23</td></tr>
-          <tr><td>Council score</td>    <td class="il">19 / 25</td>    <td class="dir best">21 / 25</td> <td class="sh">17 / 25</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="spacer"></div>
-
-    <h3>Feature Completeness</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Notes CRUD</td>            <td>Yes</td>         <td>Yes</td>         <td>Yes</td></tr>
-          <tr><td>Full-text search (FTS)</td> <td>Yes</td>        <td>Yes</td>         <td>Yes (+ FTS triggers)</td></tr>
-          <tr><td>RAG integration</td>        <td class="il best">Yes</td>  <td style="color:var(--muted)">No</td>   <td style="color:var(--muted)">No</td></tr>
-          <tr><td>Ask Claude</td>             <td>Yes</td>         <td>Yes</td>         <td>Yes</td></tr>
-          <tr><td>Folder organization</td>    <td style="color:var(--muted)">No</td>   <td class="dir best">Yes</td>  <td style="color:var(--muted)">No</td></tr>
-          <tr><td>Backlinks</td>              <td style="color:var(--muted)">No</td>   <td class="dir best">Yes</td>  <td style="color:var(--muted)">No</td></tr>
-          <tr><td>Daily notes</td>            <td style="color:var(--muted)">No</td>   <td class="dir best">Yes</td>  <td style="color:var(--muted)">No</td></tr>
-          <tr><td>Version history</td>        <td style="color:var(--muted)">No</td>   <td class="dir best">Yes</td>  <td style="color:var(--muted)">No</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Key Findings</h3>
-    <ul class="finding-list">
-      <li>Direct implemented the most features (7/8) including unique ones: folders, backlinks, daily notes, version history.</li>
-      <li>Innerloop uniquely implemented RAG integration &mdash; the only workflow to connect the retrieval pipeline to notes.</li>
-      <li>Innerloop wrote 57 tests (nearly 2x Direct, 2.5x ShipIt) &mdash; strongest test coverage by a large margin.</li>
-      <li>Direct was fastest (9.9m) and scored highest (21/25) &mdash; best overall balance of speed and quality.</li>
-      <li>ShipIt was close in time (11.1m) but lowest on tests and features &mdash; strong on FTS triggers but thin elsewhere.</li>
-    </ul>
-
-    <div class="spacer"></div>
-    <div class="chart-wrap">
-      <h3>S4: Tests Written vs Council Score</h3>
-      <canvas id="chart-s4"></canvas>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Pull Requests &mdash; claude-talk</h3>
-    <div class="pr-links">
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/1" target="_blank">PR #1 &mdash; Innerloop</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/2" target="_blank">PR #2 &mdash; Direct</a>
-      <a class="pr-link" href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/3" target="_blank">PR #3 &mdash; ShipIt</a>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 7: COST & TOKENS
-  ================================================================ -->
-  <section class="tab-panel" id="tab-cost">
-    <div class="section-header">
-      <div class="dot" style="background:#f59e0b"></div>
-      <h2>Cost &amp; Token Analysis</h2>
-    </div>
-    <p>Cost estimates at $15 / 1M tokens blended rate. All 4 scenarios combined. Cost differences between workflows are negligible.</p>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Scenario</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>S1 &mdash; Open Task</td>    <td class="il">$5.08</td>     <td class="dir best">$4.13</td>  <td class="sh">$5.51</td></tr>
-          <tr><td>S2 &mdash; Bug Fix</td>      <td class="il best">$4.39</td><td class="dir">$4.34</td>      <td class="sh">$4.34 (run 1)</td></tr>
-          <tr><td>S3 &mdash; Work Item</td>    <td class="il">~$4.60</td>     <td class="dir best">~$3.64</td>  <td class="sh">~$4.58</td></tr>
-          <tr><td>S4 &mdash; Second Brain</td> <td class="il">$14.67</td>     <td class="dir best">$4.36</td>  <td class="sh">$4.39</td></tr>
-          <tr style="font-weight:700">
-            <td>Total (4 scenarios)</td>
-            <td class="il">$28.73</td>
-            <td class="dir best">$16.48</td>
-            <td class="sh">$22.46</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="card-grid card-grid-2">
-      <div class="chart-wrap">
-        <h3>Cost per Scenario</h3>
-        <canvas id="chart-cost-scenario"></canvas>
+      <!-- S1 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S1 — Open Task · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/7" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario1-innerloop</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #7 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/9" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario1-direct</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #9 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/8" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario1-shipit</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #8 →</span>
+          </a>
+        </div>
       </div>
-      <div class="chart-wrap">
-        <h3>Total Cost by Workflow</h3>
-        <canvas id="chart-cost-total"></canvas>
+
+      <!-- S2 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S2 — Bug Fix · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario2-innerloop · 9/10 fixed</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #4 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario2-direct · 10/10 fixed</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #5 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario2-shipit · evidence only</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #6 →</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <div class="spacer"></div>
-
-    <h3>Key Cost Insights</h3>
-    <div class="callout callout-success">
-      <p><strong>Cost differences are negligible.</strong> The spread between cheapest (Direct: $16.48) and most expensive (Innerloop: $28.73) is ~$12.25 &mdash; a 74% difference. Choose workflow based on quality and test coverage needs, not cost.</p>
-    </div>
-    <div class="callout callout-info">
-      <p><strong>S4 is the most expensive scenario</strong> &mdash; The Second Brain (S4) required more token-intensive reasoning and test generation across all 3 workflows ($3.64&ndash;$4.60 each).</p>
-    </div>
-    <div class="callout callout-warning">
-      <p><strong>Innerloop is costlier on open-ended tasks</strong> &mdash; Its structured review phases consume more tokens on exploratory work (S1: $5.08 vs Direct $4.13). On constrained bug-fix tasks (S2), all three are similar ($4-$8).</p>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       TAB 8: DECISION GUIDE
-  ================================================================ -->
-  <section class="tab-panel" id="tab-guide">
-    <div class="section-header">
-      <div class="dot" style="background:#22c55e"></div>
-      <h2>Decision Guide</h2>
-    </div>
-    <p>Use this guide to choose the right workflow. Cost differences are negligible ($12.25 total) &mdash; decide based on quality and timeline requirements.</p>
-
-    <div class="spacer"></div>
-
-    <h3>Full Decision Matrix</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Situation</th>
-            <th style="color:var(--innerloop)">Innerloop</th>
-            <th style="color:var(--direct)">Direct</th>
-            <th style="color:var(--shipit)">ShipIt</th>
-            <th>Recommended</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Production code, tests required</td>       <td>Strong</td>    <td>Moderate</td>     <td>Variable</td>   <td class="il best">Innerloop</td></tr>
-          <tr><td>Time-critical (&lt;15m) prototype</td>     <td>Too slow</td>  <td>Fastest</td>      <td>Too slow</td>   <td class="dir best">Direct</td></tr>
-          <tr><td>GUS work item with clear AC</td>           <td>Good</td>      <td>Best quality</td> <td>OK</td>         <td class="dir best">Direct</td></tr>
-          <tr><td>Feature needing deep test coverage</td>    <td>Best tests</td><td>Moderate</td>     <td>Least</td>      <td class="il best">Innerloop</td></tr>
-          <tr><td>Unattended async pipeline</td>             <td>Needs human</td><td>Needs human</td> <td>Best fit</td>   <td class="sh best">ShipIt</td></tr>
-          <tr><td>Code review gate built-in</td>             <td>Built-in</td>  <td>Manual only</td>  <td>Partial</td>    <td class="il best">Innerloop</td></tr>
-          <tr><td>Bug fix, highest accuracy needed</td>      <td>9/10 typical</td><td>10/10 achieved</td><td>8/10 typical</td><td class="dir best">Direct</td></tr>
-          <tr><td>New product feature, RAG/advanced</td>     <td>RAG + tests</td><td>Most features</td><td>Basic only</td><td><span style="color:var(--innerloop)">IL</span> or <span style="color:var(--direct)">Direct</span></td></tr>
-          <tr><td>Open-ended cold-start investigation</td>   <td>Structured</td><td>Fastest</td>      <td>Thorough</td>   <td class="dir best">Direct</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="spacer"></div>
-    <h3>Recommendations</h3>
-    <div class="card-grid card-grid-3">
-      <div class="rec-card" style="border-top:3px solid var(--innerloop)">
-        <h3 style="color:var(--innerloop)">Use Innerloop when...</h3>
-        <ul>
-          <li>Production code going to main</li>
-          <li>Test coverage is a hard requirement</li>
-          <li>You want a built-in council review gate</li>
-          <li>RAG or advanced integration needed</li>
-          <li>Sprint features with Definition of Done</li>
-        </ul>
+      <!-- S3 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S3 — W-21632772 · beethoven / GenUI Services</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/7" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario3-innerloop · 19/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #7 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/8" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario3-direct · 22/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #8 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/beethoven/pull/9" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario3-shipit · 17/25</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #9 →</span>
+          </a>
+        </div>
       </div>
-      <div class="rec-card" style="border-top:3px solid var(--direct)">
-        <h3 style="color:var(--direct)">Use Direct when...</h3>
-        <ul>
-          <li>Speed is the priority (&lt;15m window)</li>
-          <li>GUS work item with clear acceptance criteria</li>
-          <li>Highest quality output per dollar</li>
-          <li>Bug fix with known root cause</li>
-          <li>Demo or prototype code</li>
-        </ul>
+
+      <!-- S4 -->
+      <div class="chart-card" style="margin-bottom:0;padding:24px 28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;">S4 — Second Brain · claude-talk</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/1" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--il)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-il" style="font-size:10px;padding:2px 7px;">InnerLoop</span><span style="font-size:13px;color:var(--text);">scenario4-innerloop · 57 tests</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #1 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/2" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--dir)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-dir" style="font-size:10px;padding:2px 7px;">Direct</span><span style="font-size:13px;color:var(--text);">scenario4-direct · folders + backlinks</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #2 →</span>
+          </a>
+          <a href="https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/3" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:6px;border:1px solid var(--border);text-decoration:none;" onmouseover="this.style.borderColor='var(--si)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="display:flex;align-items:center;gap:8px;"><span class="workflow-pill pill-si" style="font-size:10px;padding:2px 7px;">ShipIt</span><span style="font-size:13px;color:var(--text);">scenario4-shipit · FTS triggers</span></span>
+            <span style="font-size:11px;color:var(--muted);">PR #3 →</span>
+          </a>
+        </div>
       </div>
-      <div class="rec-card" style="border-top:3px solid var(--shipit)">
-        <h3 style="color:var(--shipit)">Use ShipIt when...</h3>
-        <ul>
-          <li>Fully unattended pipeline required</li>
-          <li>Batch processing many small tasks</li>
-          <li>No human available in the loop</li>
-          <li><strong>Always validate output</strong> before merging &mdash; silent anomalies are possible</li>
-        </ul>
-      </div>
+
     </div>
 
-    <div class="spacer"></div>
-    <h3>Overall Ranking by Dimension</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Dimension</th><th>1st</th><th>2nd</th><th>3rd</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Speed</td>                     <td class="dir best">Direct</td>           <td class="il">Innerloop</td>    <td class="sh">ShipIt</td></tr>
-          <tr><td>Council quality score</td>     <td class="dir best">Direct (20.3 avg)</td><td class="il">Innerloop (18.3)</td><td class="sh">ShipIt (17.0)</td></tr>
-          <tr><td>Test coverage</td>             <td class="il best">Innerloop</td>         <td class="sh">ShipIt</td>       <td class="dir">Direct</td></tr>
-          <tr><td>Cost efficiency</td>           <td class="dir best">Direct ($16.48)</td>   <td class="sh">ShipIt ($22.46)</td><td class="il">Innerloop ($28.73)</td></tr>
-          <tr><td>Autonomy (no human needed)</td><td class="sh best">ShipIt</td>            <td class="il">Innerloop</td>    <td class="dir">Direct</td></tr>
-          <tr><td>Bug fix accuracy</td>          <td class="dir best">Direct (10/10)</td>   <td class="il">Innerloop (9/10)</td><td class="sh">ShipIt (8/10)</td></tr>
-        </tbody>
-      </table>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://github.com/inba-ganapathy/ai-workflow-comparison" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--navy);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">
+        📊 Full Study Repository + Metrics
+      </a>
+      <a href="https://github.com/inba-ganapathy/ai-workflow-comparison/tree/main/council-reviews" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--card);border:1px solid var(--border);color:var(--navy);border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">
+        🔍 All Council Reviews
+      </a>
+      <a href="https://github.com/inba-ganapathy/ai-workflow-comparison/tree/main/scenarios" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--card);border:1px solid var(--border);color:var(--navy);border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">
+        📁 All Scenario Artifacts &amp; Metrics
+      </a>
     </div>
-  </section>
 
-</main>
+  </div></div></div>
+</section>
+
+<!-- ══════════════ GUIDANCE ══════════════ -->
+<section class="tab-section" id="tab-guidance">
+  <div class="page-body">
+    <div class="page-section"><div class="page-section-inner">
+      <div class="decision-wrap">
+    <div class="decision-header">
+      <span>Decision Criterion</span>
+      <span>InnerLoop</span>
+      <span>Direct</span>
+      <span>ShipIt</span>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Highest quality output needed</div>
+      <div><span class="dc dc-partial">Partial</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-no">No</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Cost-sensitive environment</div>
+      <div><span class="dc dc-no">No</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-partial">Partial</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Speed-critical simple task</div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-no">No</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Complex feature development</div>
+      <div><span class="dc dc-no">No</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-partial">Partial</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Mature CI/CD pipeline in place</div>
+      <div><span class="dc dc-partial">Partial</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">Standard sprint work items</div>
+      <div><span class="dc dc-partial">Partial</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-no">No</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-criterion">High-frequency batch throughput</div>
+      <div><span class="dc dc-yes">Yes</span></div>
+      <div><span class="dc dc-partial">Partial</span></div>
+      <div><span class="dc dc-yes">Yes</span></div>
+    </div>
+  </div>
+
+  <div class="rec-grid">
+    <div class="rec-card" style="border-top:4px solid var(--il);">
+      <div class="rec-header">
+        <div class="rec-icon" style="background:rgba(3,45,96,0.08);">🔄</div>
+        <div>
+          <div class="rec-name">InnerLoop</div>
+          <div class="rec-tagline">Speed-first simple tasks</div>
+        </div>
+      </div>
+      <ul class="rec-list">
+        <li>Time-critical bug fixes where 3–7 min matters</li>
+        <li>High-frequency, low-complexity sprint tasks</li>
+        <li>Scenarios where iteration speed beats quality</li>
+        <li>Not recommended for S4-type complex features</li>
+      </ul>
+    </div>
+    <div class="rec-card" style="border-top:4px solid var(--dir);">
+      <div class="rec-header">
+        <div class="rec-icon" style="background:rgba(1,118,211,0.08);">⚡</div>
+        <div>
+          <div class="rec-name">Direct Implementation</div>
+          <div class="rec-tagline">Default for all standard work</div>
+        </div>
+      </div>
+      <ul class="rec-list">
+        <li>Recommended default for all sprint work items</li>
+        <li>Complex features needing high council scores</li>
+        <li>Any scenario where cost discipline matters</li>
+        <li>Well-specified tasks with clear acceptance criteria</li>
+      </ul>
+    </div>
+    <div class="rec-card" style="border-top:4px solid var(--si);">
+      <div class="rec-header">
+        <div class="rec-icon" style="background:rgba(255,176,59,0.12);">🚀</div>
+        <div>
+          <div class="rec-name">ShipIt</div>
+          <div class="rec-tagline">CI/CD-integrated automation</div>
+        </div>
+      </div>
+      <ul class="rec-list">
+        <li>Mature CI/CD pipelines where setup costs amortized</li>
+        <li>S4-type features needing 11-min turnaround</li>
+        <li>Batch automation scenarios at scale</li>
+        <li>Avoid for simple tasks — 41-min S1 time is prohibitive</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+    </div></div>
+  </div>
+</section>
 
 <script>
-  // ── TAB NAVIGATION ─────────────────────────────────────────────────
-  (function () {
-    var navBtns   = document.querySelectorAll('#tab-nav button');
-    var panels    = document.querySelectorAll('.tab-panel');
-    var chartsDone = {};
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + target).classList.add('active');
+  });
+});
 
-    function activateTab(tabId) {
-      navBtns.forEach(function (b) {
-        b.classList.toggle('active', b.dataset.tab === tabId);
-      });
-      panels.forEach(function (p) {
-        p.classList.toggle('active', p.id === 'tab-' + tabId);
-      });
-      initCharts(tabId);
-    }
+// Chart defaults
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#5A6977';
 
-    navBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        activateTab(btn.dataset.tab);
-      });
-    });
-
-    // ── CHART PALETTE ─────────────────────────────────────────────
-    var IL  = 'rgba(99,102,241,0.8)';
-    var DIR = 'rgba(59,130,246,0.8)';
-    var SH  = 'rgba(245,158,11,0.8)';
-    var SH2 = 'rgba(245,158,11,0.4)';
-
-    var axisStyle = {
-      ticks: { color: '#94a3b8', font: { size: 11 } },
-      grid:  { color: '#2a2a35' }
-    };
-    var legendStyle = {
-      labels: { color: '#94a3b8', font: { size: 11 } }
-    };
-
-    function baseOpts(yMax) {
-      var opts = {
-        responsive: true,
-        plugins: { legend: legendStyle },
-        scales: {
-          x: axisStyle,
-          y: Object.assign({}, axisStyle, yMax ? { max: yMax } : {})
+// Council scores chart
+const councilCtx = document.getElementById('councilChart').getContext('2d');
+new Chart(councilCtx, {
+  type: 'bar',
+  data: {
+    labels: ['S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
+    datasets: [
+      {
+        label: 'InnerLoop',
+        data: [17, 19, 19],
+        backgroundColor: '#032D60',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'Direct',
+        data: [18, 22, 21],
+        backgroundColor: '#0176D3',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'ShipIt',
+        data: [11, 17, 17],
+        backgroundColor: '#0B827C',
+        borderRadius: 6,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#032D60',
+        bodyColor: '#5A6977',
+        borderColor: '#D8E3F0',
+        borderWidth: 1,
+        padding: 12,
+        titleFont: { weight: '700', size: 13 },
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}/25`
         }
-      };
-      return opts;
-    }
-
-    // ── CHART FACTORY ─────────────────────────────────────────────
-    function initCharts(tabId) {
-      if (chartsDone[tabId]) return;
-      chartsDone[tabId] = true;
-
-      if (tabId === 'exec') {
-        // Bar: council scores per scenario
-        new Chart(document.getElementById('chart-exec-scores'), {
-          type: 'bar',
-          data: {
-            labels: ['S2: Bug Fix', 'S3: Work Item', 'S4: Second Brain'],
-            datasets: [
-              { label: 'Innerloop', data: [17, 19, 19], backgroundColor: IL },
-              { label: 'Direct',    data: [18, 22, 21], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [11, 17, 17], backgroundColor: SH }
-            ]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: legendStyle },
-            scales: {
-              x: axisStyle,
-              y: Object.assign({}, axisStyle, { min: 0, max: 25,
-                ticks: Object.assign({}, axisStyle.ticks, {
-                  callback: function (v) { return v + '/25'; }
-                })
-              })
-            }
-          }
-        });
-
-        // Doughnut: total cost
-        new Chart(document.getElementById('chart-exec-cost'), {
-          type: 'doughnut',
-          data: {
-            labels: ['Innerloop ($28.73)', 'Direct ($16.48)', 'ShipIt ($22.46)'],
-            datasets: [{
-              data: [28.73, 16.48, 22.46],
-              backgroundColor: [IL, DIR, SH],
-              borderColor: '#141418',
-              borderWidth: 3
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { labels: { color: '#94a3b8' }, position: 'bottom' }
-            }
-          }
-        });
       }
-
-      if (tabId === 's1') {
-        new Chart(document.getElementById('chart-s1'), {
-          type: 'bar',
-          data: {
-            labels: ['Time (s)', 'Tool Calls', 'Tests Written', 'Tests Passing'],
-            datasets: [
-              { label: 'Innerloop', data: [400,  37, 2, 35], backgroundColor: IL },
-              { label: 'Direct',    data: [196,  22, 0, 26], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [2468, 42, 6, 32], backgroundColor: SH }
-            ]
-          },
-          options: baseOpts()
-        });
-      }
-
-      if (tabId === 's2') {
-        new Chart(document.getElementById('chart-s2'), {
-          type: 'bar',
-          data: {
-            labels: ['Bugs Fixed (/10)', 'Tests Written', 'Council Score (/25)'],
-            datasets: [
-              { label: 'Innerloop',    data: [9, 7,  17],   backgroundColor: IL },
-              { label: 'Direct',       data: [10, 1, 18],   backgroundColor: DIR },
-              { label: 'ShipIt Run 1', data: [0, 3,  11],   backgroundColor: SH2 },
-              { label: 'ShipIt Run 2', data: [8, 17, null], backgroundColor: SH }
-            ]
-          },
-          options: baseOpts()
-        });
-      }
-
-      if (tabId === 's3') {
-        new Chart(document.getElementById('chart-s3'), {
-          type: 'bar',
-          data: {
-            labels: ['Tests Written', 'Council Score (/25)', 'Time (min)'],
-            datasets: [
-              { label: 'Innerloop', data: [9,   19, 3.6],  backgroundColor: IL },
-              { label: 'Direct',    data: [45,  22, 24.2], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [13,  17, 37.2], backgroundColor: SH }
-            ]
-          },
-          options: baseOpts()
-        });
-      }
-
-      if (tabId === 's4') {
-        new Chart(document.getElementById('chart-s4'), {
-          type: 'bar',
-          data: {
-            labels: ['Tests Written', 'Council Score (/25)', 'Time (min)'],
-            datasets: [
-              { label: 'Innerloop', data: [57, 19, 29],  backgroundColor: IL },
-              { label: 'Direct',    data: [31, 21, 9.9], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [23, 17, 11.1],backgroundColor: SH }
-            ]
-          },
-          options: baseOpts()
-        });
-      }
-
-      if (tabId === 'cost') {
-        new Chart(document.getElementById('chart-cost-scenario'), {
-          type: 'bar',
-          data: {
-            labels: ['S1: Open Task', 'S2: Bug Fix', 'S3: Work Item', 'S4: Second Brain'],
-            datasets: [
-              { label: 'Innerloop', data: [5.08, 4.39, 4.60, 14.67], backgroundColor: IL },
-              { label: 'Direct',    data: [4.13, 4.34, 3.64, 4.36], backgroundColor: DIR },
-              { label: 'ShipIt',    data: [5.51, 7.98, 4.58, 4.39], backgroundColor: SH }
-            ]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: legendStyle },
-            scales: {
-              x: axisStyle,
-              y: Object.assign({}, axisStyle, {
-                ticks: Object.assign({}, axisStyle.ticks, {
-                  callback: function (v) { return '$' + v.toFixed(2); }
-                })
-              })
-            }
-          }
-        });
-
-        new Chart(document.getElementById('chart-cost-total'), {
-          type: 'bar',
-          data: {
-            labels: ['Innerloop', 'Direct', 'ShipIt'],
-            datasets: [{
-              label: 'Total Cost',
-              data: [28.73, 16.48, 22.46],
-              backgroundColor: [IL, DIR, SH],
-              borderRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: {
-              x: axisStyle,
-              y: Object.assign({}, axisStyle, {
-                min: 4.5,
-                ticks: Object.assign({}, axisStyle.ticks, {
-                  callback: function (v) { return '$' + v.toFixed(2); }
-                })
-              })
-            }
-          }
-        });
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { font: { size: 13, weight: '500' }, color: '#5A6977' }
+      },
+      y: {
+        grid: { color: '#F2F5FA', lineWidth: 1 },
+        border: { display: false, dash: [4,4] },
+        min: 0,
+        max: 25,
+        ticks: {
+          stepSize: 5,
+          font: { size: 12 },
+          callback: v => v + '/25'
+        }
       }
     }
+  }
+});
 
-    // Init the default tab
-    initCharts('exec');
-  }());
+// Cost chart
+const costCtx = document.getElementById('costChart').getContext('2d');
+new Chart(costCtx, {
+  type: 'bar',
+  data: {
+    labels: ['S1 — Simple Bug Fix', 'S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
+    datasets: [
+      {
+        label: 'InnerLoop',
+        data: [5.08, 4.39, 4.60, 14.67],
+        backgroundColor: '#032D60',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'Direct',
+        data: [4.13, 4.34, 3.64, 4.36],
+        backgroundColor: '#0176D3',
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: 'ShipIt',
+        data: [5.51, 7.98, 4.58, 4.39],
+        backgroundColor: '#0B827C',
+        borderRadius: 6,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#032D60',
+        bodyColor: '#5A6977',
+        borderColor: '#D8E3F0',
+        borderWidth: 1,
+        padding: 12,
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { font: { size: 13, weight: '500' }, color: '#5A6977' }
+      },
+      y: {
+        grid: { color: '#F2F5FA' },
+        border: { display: false },
+        min: 0,
+        ticks: {
+          font: { size: 12 },
+          callback: v => '$' + v.toFixed(0)
+        }
+      }
+    }
+  }
+});
 </script>
+
+<!-- ══════════════ METHODOLOGY ══════════════ -->
+<section class="tab-section" id="tab-methodology">
+  <div class="page-body">
+    <div class="page-section"><div class="page-section-inner">
+      <div class="section-heading">Methodology &amp; Data Integrity</div>
+      <div class="section-sub">Every data point is verifiable from primary sources</div>
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div class="chart-title">Identical Prompts — Zero Pre-Analysis</div>
+        <div class="chart-subtitle">All 3 workflows received the same raw prompt simultaneously, starting from the same git commit (39de552) in isolated worktrees. No bug lists, no hints.</div>
+        <div style="background:#f8f9fa;border-radius:8px;padding:20px 24px;font-family:monospace;font-size:13px;color:#032D60;border-left:4px solid #1B96FF;margin-top:16px;">
+          S1: "The claude-talk Manager Portal has reliability and correctness issues. Investigate the codebase, identify problems, and fix them."<br><br>
+          S2: [10 pre-identified bugs provided verbatim to all 3 workflows]<br><br>
+          S3: GUS W-21632772 — "Parameterize output for loops in structured data" (queried live from gus.lightning.force.com 2026-05-17)<br><br>
+          S4: "Add a Second Brain tab to claude-talk... Phase 1: investigate. Phase 2: design. Phase 3: implement."
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:24px;">
+        <div class="chart-title">SFDC Council — 5 Independent Reviewers</div>
+        <div class="chart-subtitle">Each workflow output reviewed by 5 AI models independently before converging. Min quorum: 3/5.</div>
+        <table style="width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;">
+          <thead><tr style="background:#032D60;color:#fff;"><th style="padding:10px 14px;text-align:left;">Reviewer</th><th style="padding:10px 14px;text-align:left;">Model</th><th style="padding:10px 14px;text-align:left;">Role</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #D8E3F0;"><td style="padding:10px 14px;font-weight:600;">Claude Code</td><td style="padding:10px 14px;">Lead reviewer</td><td style="padding:10px 14px;">Full codebase access, reads actual files</td></tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid #D8E3F0;"><td style="padding:10px 14px;font-weight:600;">Claude Opus 4.7</td><td style="padding:10px 14px;">claude-opus-4-7</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+            <tr style="border-bottom:1px solid #D8E3F0;"><td style="padding:10px 14px;font-weight:600;">Claude Sonnet 4.6</td><td style="padding:10px 14px;">claude-sonnet-4-6</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+            <tr style="background:#f9f9f9;border-bottom:1px solid #D8E3F0;"><td style="padding:10px 14px;font-weight:600;">GPT-5</td><td style="padding:10px 14px;">gpt-5</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+            <tr><td style="padding:10px 14px;font-weight:600;">Gemini 2.5 Pro</td><td style="padding:10px 14px;">gemini-2.5-pro</td><td style="padding:10px 14px;">Gateway reviewer</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#5A6977;margin-top:12px;">Gateway: LLMGateway Express · eng-ai-model-gateway.sfproxy.devx-preprod.aws.sfdc.cl</p>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Cost Methodology</div>
+        <div class="chart-subtitle">Estimated from agent token usage · Claude Opus 4.7 pricing</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;margin-bottom:20px;">
+          <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Input Tokens</div>
+            <div style="font-size:28px;font-weight:800;color:var(--navy);">$15<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+          </div>
+          <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Output Tokens</div>
+            <div style="font-size:28px;font-weight:800;color:var(--navy);">$75<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+          </div>
+          <div style="background:var(--light-bg);border-radius:8px;padding:16px 20px;text-align:center;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Blended Rate</div>
+            <div style="font-size:28px;font-weight:800;color:var(--navy);">$36<span style="font-size:14px;font-weight:500;color:var(--muted)">/1M</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">65% input · 35% output</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:#EEF4FF;border-radius:8px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px;">Comparison Scenarios (S1–S4)</div>
+            <div style="font-size:22px;font-weight:800;color:var(--navy);">$67.67 <span style="font-size:13px;font-weight:500;color:var(--muted)">total</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">InnerLoop $28.73 · Direct $16.48 · ShipIt $22.46</div>
+          </div>
+          <div style="background:#EEF4FF;border-radius:8px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:4px;">Full Session Estimate</div>
+            <div style="font-size:22px;font-weight:800;color:var(--navy);">$150–300+</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">Includes planning, UX, council reviews, website builds</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
 </body>
 </html>

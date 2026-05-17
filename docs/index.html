@@ -1363,25 +1363,25 @@ const councilCtx = document.getElementById('councilChart').getContext('2d');
 new Chart(councilCtx, {
   type: 'bar',
   data: {
-    labels: ['S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
+    labels: ['S1 — Open Task', 'S2 — Bug Fix + Tests', 'S3 — Work Item', 'S4 — Complex Feature'],
     datasets: [
       {
         label: 'InnerLoop',
-        data: [17, 19, 19],
+        data: [18, 17, 19, 19],
         backgroundColor: '#032D60',
         borderRadius: 6,
         borderSkipped: false,
       },
       {
         label: 'Direct',
-        data: [18, 22, 21],
+        data: [14, 18, 22, 21],
         backgroundColor: '#0176D3',
         borderRadius: 6,
         borderSkipped: false,
       },
       {
         label: 'ShipIt',
-        data: [11, 17, 17],
+        data: [20, 11, 17, 17],
         backgroundColor: '#0B827C',
         borderRadius: 6,
         borderSkipped: false,

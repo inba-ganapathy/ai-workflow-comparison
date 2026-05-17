@@ -331,7 +331,7 @@
     <div class="spacer"></div>
     <h3>Top 3 Findings</h3>
     <div class="callout callout-info">
-      <p><strong>Speed and quality favor Direct</strong> &mdash; Direct is fastest on 3 of 4 scenarios and achieved the highest average council score (20.3/25). Ideal for GUS work items and time-boxed tasks.</p>
+      <p><strong>Speed and quality favor Direct</strong> &mdash; Direct is fastest on 2 of 4 scenarios and achieved the highest average council score (20.3/25). Ideal for GUS work items and time-boxed tasks.</p>
     </div>
     <div class="callout callout-success">
       <p><strong>Innerloop produces the most tests</strong> &mdash; Across all scenarios, Innerloop wrote significantly more tests. In S4, Innerloop wrote 57 tests vs Direct's 31 and ShipIt's 23. Best choice when test coverage is a hard requirement.</p>
@@ -346,7 +346,7 @@
     <div class="card-grid card-grid-3">
       <div class="workflow-card innerloop">
         <span class="badge badge-innerloop">Innerloop</span>
-        <div class="score-big innerloop">18.8</div>
+        <div class="score-big innerloop">18.3</div>
         <div style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Avg council score /25</div>
         <ul style="list-style:none;font-size:0.87rem;color:var(--muted)">
           <li style="margin-bottom:4px">&#10003; Highest test coverage</li>
@@ -368,7 +368,7 @@
       </div>
       <div class="workflow-card shipit">
         <span class="badge badge-shipit">ShipIt</span>
-        <div class="score-big shipit">17.0</div>
+        <div class="score-big shipit">15.0</div>
         <div style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">Avg council score /25</div>
         <ul style="list-style:none;font-size:0.87rem;color:var(--muted)">
           <li style="margin-bottom:4px">&#10003; Fully automated pipeline</li>
@@ -473,7 +473,7 @@
 
     <h3>ShipIt Limitation Note</h3>
     <div class="anomaly-box">
-      <strong>S2 Anomaly:</strong> ShipIt's first run on Scenario 2 (Bug Fix) produced 0 code changes. Root cause is unknown &mdash; the run completed without errors but no files were modified. A re-run was performed and succeeded (8/10 bugs fixed, 17 new tests). Both runs are reported transparently in the S2 tab. ShipIt is not considered broken; this was an isolated anomaly.
+      <strong>S2 Anomaly:</strong> ShipIt's first run on Scenario 2 (Bug Fix) produced 0 code changes. Root cause is unknown &mdash; the run completed without errors but no files were modified. A re-run was performed and succeeded (10/10 bugs fixed, 17 new tests). Both runs are reported transparently in the S2 tab. ShipIt is not considered broken; this was an isolated anomaly.
     </div>
 
     <div class="spacer"></div>
@@ -547,7 +547,7 @@ Acceptance Criteria:
       <li>All 3 workflows found the same 6 bugs &mdash; confirming the bugs were clearly surfaceable from the codebase.</li>
       <li>Direct was 2x faster than Innerloop and 12x faster than ShipIt on this cold-start task.</li>
       <li>ShipIt wrote the most tests (6) despite being slowest &mdash; its post-execution review phase contributed.</li>
-      <li>ShipIt earned the only council review score (22/25) for this scenario.</li>
+      <li>ShipIt's internal reviewer scored 22/25 for this scenario (no SFDC Council review run for S1).</li>
       <li>TypeScript compliance was clean across all 3 &mdash; no type regressions introduced.</li>
     </ul>
 
@@ -596,7 +596,7 @@ Acceptance Criteria:
             <td class="il">9 / 10</td>
             <td class="dir best">10 / 10</td>
             <td class="sh" style="color:var(--error)">0 / 10 &mdash; anomaly</td>
-            <td class="sh">8 / 10</td>
+            <td class="sh">10 / 10</td>
           </tr>
           <tr>
             <td>Tests written</td>
@@ -810,7 +810,7 @@ Acceptance Criteria:
         </thead>
         <tbody>
           <tr><td>S1 &mdash; Open Task</td>    <td class="il">$5.08</td>     <td class="dir best">$4.13</td>  <td class="sh">$5.51</td></tr>
-          <tr><td>S2 &mdash; Bug Fix</td>      <td class="il best">$4.39</td><td class="dir">$4.34</td>      <td class="sh">~$0.82</td></tr>
+          <tr><td>S2 &mdash; Bug Fix</td>      <td class="il best">$4.39</td><td class="dir">$4.34</td>      <td class="sh">$4.34 (run 1)</td></tr>
           <tr><td>S3 &mdash; Work Item</td>    <td class="il">~$4.60</td>     <td class="dir best">~$3.64</td>  <td class="sh">~$4.58</td></tr>
           <tr><td>S4 &mdash; Second Brain</td> <td class="il">$14.67</td>     <td class="dir best">$4.36</td>  <td class="sh">$4.39</td></tr>
           <tr style="font-weight:700">
@@ -843,7 +843,7 @@ Acceptance Criteria:
       <p><strong>Cost differences are negligible.</strong> The spread between cheapest (Direct: $16.48) and most expensive (Innerloop: $28.73) is ~$12.25 &mdash; a 74% difference. Choose workflow based on quality and test coverage needs, not cost.</p>
     </div>
     <div class="callout callout-info">
-      <p><strong>S3 is the most expensive scenario</strong> &mdash; The GUS work item required more token-intensive reasoning and test generation across all 3 workflows ($3.64&ndash;$4.60 each).</p>
+      <p><strong>S4 is the most expensive scenario</strong> &mdash; The Second Brain (S4) required more token-intensive reasoning and test generation across all 3 workflows ($3.64&ndash;$4.60 each).</p>
     </div>
     <div class="callout callout-warning">
       <p><strong>Innerloop is costlier on open-ended tasks</strong> &mdash; Its structured review phases consume more tokens on exploratory work (S1: $5.08 vs Direct $4.13). On constrained bug-fix tasks (S2), all three are similar ($4-$8).</p>
@@ -858,7 +858,7 @@ Acceptance Criteria:
       <div class="dot" style="background:#22c55e"></div>
       <h2>Decision Guide</h2>
     </div>
-    <p>Use this guide to choose the right workflow. Cost differences are negligible (&lt;$0.31 total) &mdash; decide based on quality and timeline requirements.</p>
+    <p>Use this guide to choose the right workflow. Cost differences are negligible ($12.25 total) &mdash; decide based on quality and timeline requirements.</p>
 
     <div class="spacer"></div>
 
@@ -931,7 +931,7 @@ Acceptance Criteria:
         </thead>
         <tbody>
           <tr><td>Speed</td>                     <td class="dir best">Direct</td>           <td class="il">Innerloop</td>    <td class="sh">ShipIt</td></tr>
-          <tr><td>Council quality score</td>     <td class="dir best">Direct (20.3 avg)</td><td class="il">Innerloop (18.8)</td><td class="sh">ShipIt (17.0)</td></tr>
+          <tr><td>Council quality score</td>     <td class="dir best">Direct (20.3 avg)</td><td class="il">Innerloop (18.3)</td><td class="sh">ShipIt (17.0)</td></tr>
           <tr><td>Test coverage</td>             <td class="il best">Innerloop</td>         <td class="sh">ShipIt</td>       <td class="dir">Direct</td></tr>
           <tr><td>Cost efficiency</td>           <td class="dir best">Direct ($16.48)</td>   <td class="sh">ShipIt ($22.46)</td><td class="il">Innerloop ($28.73)</td></tr>
           <tr><td>Autonomy (no human needed)</td><td class="sh best">ShipIt</td>            <td class="il">Innerloop</td>    <td class="dir">Direct</td></tr>

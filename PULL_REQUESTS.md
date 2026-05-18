@@ -23,7 +23,7 @@ environment issues (missing llama_index/defusedxml — unrelated to the study ch
 | Workflow | PR | Council Score | Bugs Fixed |
 |----------|-----|---------------|-----------|
 | 🔬 Innerloop | [PR #4](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/4) | 17/25 | 9/10 |
-| ⚡ Direct | [PR #5](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5) | 18/25 | 10/10 |
+| ⚡ Direct | [PR #5](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/5) | 18/25 | 8/10 |
 | 🚀 ShipIt | [PR #6](https://git.soma.salesforce.com/inbasagar-ganapathy/claude-talk/pull/6) | 11/25 | **0/10** (evidence only) |
 
 ## Scenario 1 — Open Task (claude-talk, cold-start)

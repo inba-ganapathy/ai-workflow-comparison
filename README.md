@@ -3,29 +3,50 @@
 **SVP Executive Briefing — AI-Assisted Software Engineering Workflows**
 
 🌐 **Live Report:** [https://inba-ganapathy.github.io/ai-workflow-comparison](https://inba-ganapathy.github.io/ai-workflow-comparison)
+🏢 **Internal (git.soma):** [https://git.soma.salesforce.com/pages/inbasagar-ganapathy/ai-workflow-comparison/](https://git.soma.salesforce.com/pages/inbasagar-ganapathy/ai-workflow-comparison/)
 
 ---
 
-## Overview
+## What This Is
 
-A rigorous, data-driven comparison of three AI developer workflows evaluated against four real engineering scenarios on production codebases (claude-talk and beethoven/GenUI Services).
+A controlled benchmark comparing three AI developer workflow strategies across four real engineering scenarios on production Salesforce codebases. All results independently reviewed by a 5-model SFDC Council (Claude Code, Opus 4.7, Sonnet 4.6, GPT-5, Gemini 2.5 Pro).
+
+**Top finding:** Each workflow independently missed bugs the others caught. Running 5 models in parallel as a post-implementation review captured the union of all findings — at ~$0.50 and ~5 minutes per run. Model diversity beats workflow sophistication as a quality gate.
+
+---
+
+## Workflows Compared
 
 | Workflow | Description |
 |----------|-------------|
-| 🔬 **Innerloop** | Structured 3-phase pipeline: Investigate → Execute → Review. Specialist subagents, TDD, plan audit, independent code review. |
-| ⚡ **Direct Implementation** | No structured workflow. Read → identify → fix → verify. Single agent, no phases, no review. |
-| 🚀 **ShipIt** | Salesforce `automation-platform-skill-poc`. Full multi-agent pipeline: Analyst → QA → Engineer → [Reviewer ∥ Validator] → Ship. Designed for GUS W-numbers with Manager approval gates. |
+| 🔬 **InnerLoop** | Structured 4-phase: Investigate → Plan → Execute → Review. Specialist subagents per phase, TDD enforced. Invoked via `/innerloop` Claude Code skill. |
+| ⚡ **Direct** | No structured workflow. Single agent, no phases, no review pass. Plain Claude Code with no plugins. |
+| 🚀 **ShipIt** | Multi-agent pipeline: Analyst → Engineer → Reviewer → Validator. Requires Agent Teams feature. Run via `automation-platform-skill-poc`. |
 
 ---
 
 ## Scenarios
 
-| # | Scenario | Task Type | Codebase | Status |
-|---|----------|-----------|----------|--------|
-| 1 | Open Task | Cold-start bug discovery from raw prompt | claude-talk | 🔄 Re-running with real ShipIt |
-| 2 | Pre-identified Bug Fix | 10 known bugs, exact file:line locations given | claude-talk | 📋 Pending |
-| 3 | Work Item W-21632772 | GUS User Story — "Parameterize output for loops in structured data" | beethoven (GenUI Services) | 📋 Pending |
-| 4 | Second Brain Feature | Feature build from structured product prompt | claude-talk | 📋 Pending |
+| # | Scenario | Task Type | Codebase | Council Winner |
+|---|----------|-----------|----------|----------------|
+| S1 | Open Task | Cold-start bug discovery, no pre-analysis | claude-talk | ShipIt (20/25) |
+| S2 | Pre-identified Bug Fix | 10 known bugs with exact file:line locations | claude-talk | Direct (18/25) |
+| S3 | Work Item W-21632772 | GUS User Story — "Parameterize output for loops in structured data" | beethoven / GenUI Services | Direct (22/25) |
+| S4 | Second Brain Feature | Full feature build from structured product prompt | claude-talk | Direct (21/25) |
+
+---
+
+## Results Summary
+
+| Metric | InnerLoop | Direct | ShipIt |
+|--------|-----------|--------|--------|
+| Avg council score (S2–S4) | 18.3 / 25 | **20.3 / 25** | 15.0 / 25 |
+| Total cost (4 scenarios) | $28.74 | **$16.47** | $22.46 |
+| S1 time | 6.7 min | **3.3 min** | 41.1 min |
+| S2 bugs fixed | 9 / 10 | 8 / 10 | 0 / 10 (re-run: 10/10) |
+| Tests written (S4) | 57 | 31 | 23 |
+
+*S1 excluded from headline avg — ShipIt won S1 (20/25). Including S1: Direct 18.75, InnerLoop 18.25, ShipIt 16.25.*
 
 ---
 
@@ -34,28 +55,66 @@ A rigorous, data-driven comparison of three AI developer workflows evaluated aga
 ```
 scenarios/
   scenario1-open-task/{innerloop,direct,shipit}/
-    plan.md            ← Generated plan / battle plan
-    metrics.json       ← Timing, tokens, tool calls, bugs found
-    diff.patch         ← Git diff of changes made
-    council-review.md  ← SFDC Council findings
-  scenario2-bugfix/...
-  scenario3-workitem-wi/...   ← W-21632772
-  scenario4-secondbrain/...
-council-reviews/       ← Full SFDC Council (5-model) review reports
+    metrics.json       ← Timing, tokens, tool calls, bugs found/fixed
+    diff.patch         ← Git diff of all changes made
+  scenario2-bugfix/
+  scenario3-workitem-wi/   ← W-21632772
+  scenario4-secondbrain/
+council-reviews/
+  scenario1-open-task-council-review.md
+  scenario2-bugfix-council-review.md
+  scenario3-council-review.md
+  scenario4-council-review.md
 docs/
-  index.html           ← SVP analysis website (GitHub Pages)
+  index.html           ← Interactive SVP report (GitHub Pages)
+PULL_REQUESTS.md       ← Links to all 12 draft PRs on git.soma
 ```
+
+---
+
+## SFDC Council
+
+All outputs reviewed by 5 models in parallel:
+
+| Model | Role |
+|-------|------|
+| Claude Code | Lead reviewer — full codebase access |
+| Claude Opus 4.7 | Gateway reviewer |
+| Claude Sonnet 4.6 | Gateway reviewer |
+| GPT-5 | Gateway reviewer |
+| Gemini 2.5 Pro | Gateway reviewer |
+
+Scoring rubric: 25 points per scenario across Correctness, Code Quality, Architecture, Test Depth, and Completeness (5 pts each). Min quorum: 3/5 models.
 
 ---
 
 ## Data Integrity
 
-Every data point is verifiable with a cited source:
+Every data point is verifiable from a cited source:
+
+- S1/S2 timing from `elapsed_seconds` in metrics JSON files
+- S3/S4 timing from scenario metrics JSON files
+- All council scores from council review markdown files in `council-reviews/`
 - GUS W-21632772 queried live from `gus.lightning.force.com` on 2026-05-17
-- beethoven commits cited by SHA: `46062b3`, `9a3951f` (baseline: `372d164`)
-- Token counts from actual agent `usage` fields
-- Zero assumptions — all gaps are explicitly labeled in the report
+- beethoven baseline commit: `372d164` (pre-implementation); human reference: `46062b3` + `9a3951f`
+- All unverifiable estimates labeled with `†` in the report
 
 ---
 
-*Generated: May 17, 2026 | Repositories: claude-talk + beethoven | Workflows: Innerloop, Direct, ShipIt (automation-platform-skill-poc)*
+## Workflow Evidence
+
+Each run's workflow is fingerprinted in its metrics JSON:
+
+- **InnerLoop**: `"phases": {"investigate_sec": 180, "plan_sec": 30, ...}` — 5-phase timing only generated by the `/innerloop` skill
+- **Direct**: No `phases` field, lowest tool call count (22)
+- **ShipIt**: `"phases_completed": ["phase1-analyst", "phase2-backend-engineer", ...]` — 5 specialist agents; `"mode": "sequential-no-agent-teams"` (Agent Teams unavailable, ran sequentially)
+
+---
+
+## Pull Requests
+
+All scenario outputs are preserved as draft PRs on git.soma. See [PULL_REQUESTS.md](./PULL_REQUESTS.md) for links.
+
+---
+
+*Study conducted: May 17, 2026 | Author: inbasagar-ganapathy | Codebases: claude-talk + beethoven*

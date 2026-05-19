@@ -732,7 +732,63 @@
         <span class="hero-eyebrow-label">Executive Summary &nbsp;·&nbsp; May 2026</span>
       </div>
       <div class="hero-title">AI Workflow Benchmark: InnerLoop vs Direct vs ShipIt</div>
-      <!-- Council Review Callout Banner -->
+      <p class="hero-desc">Benchmark across 4 engineering scenarios (S1–S4), 3 AI workflows, measuring quality (council score), speed (minutes), and cost (API spend). Single-run measurements per workflow per scenario.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;">
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#93c5fd;">Innerloop</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">Structured 4-phase:</strong> Investigate → Plan → Execute → Review. Dedicated subagents per phase. TDD enforced.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(27,150,255,0.25);border:1px solid rgba(27,150,255,0.4);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#7dd3fc;">Direct Implementation</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">No structured workflow:</strong> Read files → identify bugs → fix → verify. Single agent, no phases, no review pass.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
+          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(11,130,124,0.3);border:1px solid rgba(11,130,124,0.5);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:#5eead4;">ShipIt</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">One command. One work item. One PR.</strong> Specialist agent pipeline: Analyst → Engineer → Reviewer → Validator. Requires Agent Teams feature to be enabled.</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5);">Clear Winner</div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:8px 20px;">
+          <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em;">Direct Implementation excels across most scenarios</span>
+          <span style="font-size:12px;background:var(--success);color:#fff;padding:3px 10px;border-radius:20px;font-weight:700;">Recommended</span>
+        </div>
+      </div>
+      <div class="kpi-row" style="margin-bottom:0;">
+        <div class="kpi-card">
+          <div class="kpi-label">Top Council Score</div>
+          <div class="kpi-value">20.3</div>
+          <div class="kpi-sub" >Direct Implementation average</div>
+          <div class="kpi-badge">↑ Best overall</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--success);">
+          <div class="kpi-label">Fastest Workflow</div>
+          <div class="kpi-value">3.3<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S1 (simple task)</div>
+          <div class="kpi-badge">↑ 12× faster than ShipIt (S1)</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--warning);">
+          <div class="kpi-label">Most Economical</div>
+          <div class="kpi-value">$16</div>
+          <div class="kpi-sub" >Direct total across 4 scenarios</div>
+          <div class="kpi-badge">↓ $12.27 vs InnerLoop</div>
+        </div>
+        <div class="kpi-card" style="border-top-color:var(--il);">
+          <div class="kpi-label">Speed Winner S4</div>
+          <div class="kpi-value">10<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
+          <div class="kpi-sub" >Direct on S4 (complex feature)</div>
+          <div class="kpi-badge">↑ ~3× faster than InnerLoop†</div>
+        </div>
+      </div>
+    </div>
+
+<!-- Council Review Callout Banner -->
       <div style="margin:0 0 40px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);border-radius:16px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.25);">
 
     <!-- Header bar -->
@@ -799,61 +855,7 @@
       </div>
     </div>
   </div>
-      <p class="hero-desc">Benchmark across 4 engineering scenarios (S1–S4), 3 AI workflows, measuring quality (council score), speed (minutes), and cost (API spend). Single-run measurements per workflow per scenario.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;">
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
-          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
-            <span style="font-size:12px;font-weight:700;color:#93c5fd;">Innerloop</span>
-          </div>
-          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">Structured 4-phase:</strong> Investigate → Plan → Execute → Review. Dedicated subagents per phase. TDD enforced.</p>
-        </div>
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
-          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(27,150,255,0.25);border:1px solid rgba(27,150,255,0.4);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
-            <span style="font-size:12px;font-weight:700;color:#7dd3fc;">Direct Implementation</span>
-          </div>
-          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">No structured workflow:</strong> Read files → identify bugs → fix → verify. Single agent, no phases, no review pass.</p>
-        </div>
-        <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:20px 22px;">
-          <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(11,130,124,0.3);border:1px solid rgba(11,130,124,0.5);border-radius:20px;padding:4px 14px;margin-bottom:14px;">
-            <span style="font-size:12px;font-weight:700;color:#5eead4;">ShipIt</span>
-          </div>
-          <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;"><strong style="color:#fff;">One command. One work item. One PR.</strong> Specialist agent pipeline: Analyst → Engineer → Reviewer → Validator. Requires Agent Teams feature to be enabled.</p>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5);">Clear Winner</div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:8px 20px;">
-          <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em;">Direct Implementation excels across most scenarios</span>
-          <span style="font-size:12px;background:var(--success);color:#fff;padding:3px 10px;border-radius:20px;font-weight:700;">Recommended</span>
-        </div>
-      </div>
-      <div class="kpi-row" style="margin-bottom:0;">
-        <div class="kpi-card">
-          <div class="kpi-label">Top Council Score</div>
-          <div class="kpi-value">20.3</div>
-          <div class="kpi-sub" >Direct Implementation average</div>
-          <div class="kpi-badge">↑ Best overall</div>
-        </div>
-        <div class="kpi-card" style="border-top-color:var(--success);">
-          <div class="kpi-label">Fastest Workflow</div>
-          <div class="kpi-value">3.3<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
-          <div class="kpi-sub" >Direct on S1 (simple task)</div>
-          <div class="kpi-badge">↑ 12× faster than ShipIt (S1)</div>
-        </div>
-        <div class="kpi-card" style="border-top-color:var(--warning);">
-          <div class="kpi-label">Most Economical</div>
-          <div class="kpi-value">$16</div>
-          <div class="kpi-sub" >Direct total across 4 scenarios</div>
-          <div class="kpi-badge">↓ $12.27 vs InnerLoop</div>
-        </div>
-        <div class="kpi-card" style="border-top-color:var(--il);">
-          <div class="kpi-label">Speed Winner S4</div>
-          <div class="kpi-value">10<span style="font-size:24px;font-weight:600;color:var(--muted)">m</span></div>
-          <div class="kpi-sub" >Direct on S4 (complex feature)</div>
-          <div class="kpi-badge">↑ ~3× faster than InnerLoop†</div>
-        </div>
-      </div>
-    </div>
+
 
     <div class="chart-card">
       <div class="chart-title">Council Scores by Scenario</div>
